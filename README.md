@@ -43,3 +43,5 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 - `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js` – en fil per speltyp
 - `quizzes/*.js` – innehållet (ord, händelser, uppgiftsgeneratorer, recept, fall …). Nytt innehåll läggs till här utan att röra motorerna.
 - `server.py` – liten lokal webbserver utan cache
+
+Se även [DESIGNPRINCIPER.md](DESIGNPRINCIPER.md) – metoden och principerna bakom spelet – och [docs/PROJEKTHISTORIK.md](docs/PROJEKTHISTORIK.md) – vad som byggts, beslut och idébacklogg.
