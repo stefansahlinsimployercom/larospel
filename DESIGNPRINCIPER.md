@@ -70,6 +70,11 @@ Man ska direkt kunna se hur stort området är, var man befinner sig, vad som ko
 - **Allmänbildning:** kunskap är krokar för ny kunskap. En bred bild av världen gör det lättare att se mönster, bedöma om påståenden är rimliga, ställa bra frågor (även till AI) och dra slutsatser man inte uttryckligen lärt sig.
 - **Praktiska färdigheter:** varför-frågan besvarar sig själv – där är utmaningen i stället att göra kunskapen lättillgänglig och enkel att spela.
 
+### 15. Holistisk kunskap – allt hänger ihop
+Kunskap från ett ställe i spelet ska kopplas till kunskap från ett helt annat: historia till geografi, geografi till fysik, matte till verkliga beslut. Spelet ska kunna visa *att* och *hur* saker hänger ihop – och låta en använda kunskap från flera håll samtidigt.
+Grunden är att innehållet beskrivs som **strukturerad kunskap** (saker med egenskaper: årtal, plats, storlek, kategori, formel), inte bara som frågor och svar. Då kan kopplingar och nya frågor skapas automatiskt.
+Ett viktigt drag: visa **varför man borde kunna svaret** – vilka saker man redan klarat som leder fram till det. Det bygger självförtroende: man kan mer än man tror.
+
 ## Speltyperna som byggstenar
 
 | Speltyp | Tränar | Passar även för |
