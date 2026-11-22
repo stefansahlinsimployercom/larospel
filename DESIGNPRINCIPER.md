@@ -55,6 +55,21 @@ Före svaret: bara allmän kunskap som hjälper en att tänka. Efter svaret: fö
 ### 10. Tydlig, ärlig återkoppling och lite gamification
 Poäng, stjärnor, sviter och färger – men aldrig på bekostnad av lärandet.
 
+### 11. Demokratisera lärandet
+Bygg in handledarens viktigaste funktioner i själva materialet: direkt återkoppling, en ledtråd i rätt ögonblick, små anpassade steg och att aldrig lämnas ensam när man fastnar. Då kan vem som helst lära sig utan att vara beroende av en annan människa – och det hjälper mest den som saknar hjälp hemifrån. (Jfr Blooms "2 sigma-problem": personlig handledning ger ca två standardavvikelser bättre resultat.)
+Driv och intresse är inte heller jämnt fördelade – verktyget ska därför *bygga upp* motivation (tidiga framgångar, synliga framsteg, ingen skam), inte förutsätta den.
+
+### 12. Inget svinn
+Varje minut ska gå till det man inte kan än – eller håller på att glömma. Svinn åt ena hållet: att nöta det man redan kan. Svinn åt andra hållet: att glömma det man en gång kunde (glömskekurvan).
+
+### 13. Visuell överblick
+Man ska direkt kunna se hur stort området är, var man befinner sig, vad som kommer härnäst och var nya delområden hänger fast. Överblick ger trygghet (området är begränsat), sammanhang (varför man lär sig något) och motivation (kartan fylls i).
+
+### 14. Varför-frågan ska ha ett konkret svar
+- **Matte och färdigheter:** varje nytt steg låser upp en ny *kategori av verklighetsproblem* man kan lösa – förutsatt att man kan översätta ordproblem till matte. Visa det, inte bara säg det.
+- **Allmänbildning:** kunskap är krokar för ny kunskap. En bred bild av världen gör det lättare att se mönster, bedöma om påståenden är rimliga, ställa bra frågor (även till AI) och dra slutsatser man inte uttryckligen lärt sig.
+- **Praktiska färdigheter:** varför-frågan besvarar sig själv – där är utmaningen i stället att göra kunskapen lättillgänglig och enkel att spela.
+
 ## Speltyperna som byggstenar
 
 | Speltyp | Tränar | Passar även för |

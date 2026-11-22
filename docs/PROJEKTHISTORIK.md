@@ -69,6 +69,15 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - Kombination **bygg → starta → något går fel → felsök**.
 - Fler språk/ord; röstuppläsning av ord.
 
+**Nästa att bygga (att göra-listan, 22 nov 2026)**
+- **Inplaceringstest:** snabbtest i början som låser upp det man redan kan (t.ex. hoppa direkt till rätt steg i matteträdet).
+- **Smart repetition (spaced repetition):** det man kan återkommer med växande mellanrum (1 dag, 3 dagar, 1 vecka, 1 månad) så länge man svarar rätt; en kort daglig repetitionsrunda.
+- **Anpassad tröskel:** snabbt och säkert rätt direkt kan räcka för "kan"; tvekan eller fel kräver fler.
+- **Mät svinnet:** visa tid till att kunna något, så att effekten syns.
+- **Kunskapskarta:** visuell överblick för varje ämne och en samlad karta på startsidan – hur stort området är, var man är, framsteg i färg, vad som kommer härnäst och var nya områden hänger fast.
+- **"Varför?"-lager i matte:** när ett steg är klart – "Det här kan du lösa nu": vilken kategori av verklighetsproblem steget låser upp, med ett exempel som ordproblem. Även omvänt: börja i en verklig fråga ("Lönar sig elbilen?") och se i trädet vilka steg som behövs.
+- **"Varför?"-lager i allmänbildning:** visa kopplingar mellan saker (t.ex. Konstantinopels fall → nya handelsvägar → Columbus) och en *rimlighetskoll* där man använder det man kan för att bedöma om påståenden stämmer.
+
 **För att gå från prototyp till verktyg för utbildningar och arbetsplatser**
 - Redigeringsverktyg för innehåll (utan kod) + AI-genererade utkast från dokument.
 - Inloggning, central progress och statistik för utbildningsansvariga; koppling till LMS (SCORM/xAPI).
