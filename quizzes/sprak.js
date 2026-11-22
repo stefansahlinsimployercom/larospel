@@ -1,0 +1,90 @@
+// Spår: Språk.
+// Ordlistor i kategorier. Varje ord finns på alla språk, så spelet kan bygga
+// quiz åt båda hållen mellan valfria två språk.
+// Flera godkända svar skrivs med snedstreck: 'vän/kompis'. Det första visas som fråga/facit.
+// Nytt språk: lägg till i `languages` och fyll i samma nyckel på varje ord.
+(window.TRACKS ||= []).push({
+  id: 'sprak', name: 'Språk', icon: '🌍',
+  languages: {
+    sv: 'Svenska',
+    en: 'Engelska',
+    es: 'Spanska',
+    pt: 'Portugisiska',
+    ru: 'Ryska',
+    zh: 'Kinesiska',
+  },
+  categories: [
+    {
+      id: 'vardag', name: 'Vardagsord', icon: '🏠',
+      words: [
+        { sv: 'hus', en: 'house', es: 'casa', pt: 'casa', ru: 'дом', zh: '房子|fángzi' },
+        { sv: 'hund', en: 'dog', es: 'perro', pt: 'cão/cachorro', ru: 'собака', zh: '狗|gǒu' },
+        { sv: 'katt', en: 'cat', es: 'gato', pt: 'gato', ru: 'кошка/кот', zh: '猫|māo' },
+        { sv: 'vatten', en: 'water', es: 'agua', pt: 'água', ru: 'вода', zh: '水|shuǐ' },
+        { sv: 'bröd', en: 'bread', es: 'pan', pt: 'pão', ru: 'хлеб', zh: '面包|miànbāo' },
+        { sv: 'bok', en: 'book', es: 'libro', pt: 'livro', ru: 'книга', zh: '书|shū' },
+        { sv: 'bil', en: 'car', es: 'coche/carro/auto', pt: 'carro', ru: 'машина/автомобиль', zh: '汽车|qìchē/车|chē' },
+        { sv: 'träd', en: 'tree', es: 'árbol', pt: 'árvore', ru: 'дерево', zh: '树|shù' },
+        { sv: 'fönster', en: 'window', es: 'ventana', pt: 'janela', ru: 'окно', zh: '窗户|chuānghu' },
+        { sv: 'stol', en: 'chair', es: 'silla', pt: 'cadeira', ru: 'стул', zh: '椅子|yǐzi' },
+        { sv: 'bord', en: 'table', es: 'mesa', pt: 'mesa', ru: 'стол', zh: '桌子|zhuōzi' },
+        { sv: 'mjölk', en: 'milk', es: 'leche', pt: 'leite', ru: 'молоко', zh: '牛奶|niúnǎi' },
+        { sv: 'sol', en: 'sun', es: 'sol', pt: 'sol', ru: 'солнце', zh: '太阳|tàiyáng' },
+        { sv: 'måne', en: 'moon', es: 'luna', pt: 'lua', ru: 'луна', zh: '月亮|yuèliang' },
+        { sv: 'vän/kompis', en: 'friend', es: 'amigo/amiga', pt: 'amigo/amiga', ru: 'друг/подруга', zh: '朋友|péngyou' },
+        { sv: 'gata', en: 'street', es: 'calle', pt: 'rua', ru: 'улица', zh: '街|jiē' },
+        { sv: 'stad', en: 'city/town', es: 'ciudad', pt: 'cidade', ru: 'город', zh: '城市|chéngshì' },
+        { sv: 'äpple', en: 'apple', es: 'manzana', pt: 'maçã', ru: 'яблоко', zh: '苹果|píngguǒ' },
+        { sv: 'nyckel', en: 'key', es: 'llave', pt: 'chave', ru: 'ключ', zh: '钥匙|yàoshi' },
+        { sv: 'dörr', en: 'door', es: 'puerta', pt: 'porta', ru: 'дверь', zh: '门|mén' },
+      ],
+    },
+    {
+      id: 'siffror', name: 'Siffror 1–10', icon: '🔢',
+      words: [
+        { sv: 'ett/en', en: 'one', es: 'uno/una', pt: 'um/uma', ru: 'один/одна', zh: '一|yī' },
+        { sv: 'två', en: 'two', es: 'dos', pt: 'dois/duas', ru: 'два/две', zh: '二|èr' },
+        { sv: 'tre', en: 'three', es: 'tres', pt: 'três', ru: 'три', zh: '三|sān' },
+        { sv: 'fyra', en: 'four', es: 'cuatro', pt: 'quatro', ru: 'четыре', zh: '四|sì' },
+        { sv: 'fem', en: 'five', es: 'cinco', pt: 'cinco', ru: 'пять', zh: '五|wǔ' },
+        { sv: 'sex', en: 'six', es: 'seis', pt: 'seis', ru: 'шесть', zh: '六|liù' },
+        { sv: 'sju', en: 'seven', es: 'siete', pt: 'sete', ru: 'семь', zh: '七|qī' },
+        { sv: 'åtta', en: 'eight', es: 'ocho', pt: 'oito', ru: 'восемь', zh: '八|bā' },
+        { sv: 'nio', en: 'nine', es: 'nueve', pt: 'nove', ru: 'девять', zh: '九|jiǔ' },
+        { sv: 'tio', en: 'ten', es: 'diez', pt: 'dez', ru: 'десять', zh: '十|shí' },
+      ],
+    },
+    {
+      id: 'farger', name: 'Färger', icon: '🎨',
+      words: [
+        { sv: 'röd', en: 'red', es: 'rojo/roja', pt: 'vermelho/vermelha', ru: 'красный', zh: '红色|hóngsè' },
+        { sv: 'blå', en: 'blue', es: 'azul', pt: 'azul', ru: 'синий/голубой', zh: '蓝色|lánsè' },
+        { sv: 'grön', en: 'green', es: 'verde', pt: 'verde', ru: 'зелёный', zh: '绿色|lǜsè' },
+        { sv: 'gul', en: 'yellow', es: 'amarillo/amarilla', pt: 'amarelo/amarela', ru: 'жёлтый', zh: '黄色|huángsè' },
+        { sv: 'svart', en: 'black', es: 'negro/negra', pt: 'preto/preta', ru: 'чёрный', zh: '黑色|hēisè' },
+        { sv: 'vit', en: 'white', es: 'blanco/blanca', pt: 'branco/branca', ru: 'белый', zh: '白色|báisè' },
+        { sv: 'brun', en: 'brown', es: 'marrón/café', pt: 'marrom/castanho', ru: 'коричневый', zh: '棕色|zōngsè' },
+        { sv: 'rosa', en: 'pink', es: 'rosa', pt: 'rosa', ru: 'розовый', zh: '粉红色|fěnhóngsè' },
+        { sv: 'orange', en: 'orange', es: 'naranja', pt: 'laranja', ru: 'оранжевый', zh: '橙色|chéngsè' },
+        { sv: 'grå', en: 'grey/gray', es: 'gris', pt: 'cinza', ru: 'серый', zh: '灰色|huīsè' },
+      ],
+    },
+    {
+      id: 'djur', name: 'Djur', icon: '🐾',
+      words: [
+        { sv: 'häst', en: 'horse', es: 'caballo', pt: 'cavalo', ru: 'лошадь/конь', zh: '马|mǎ' },
+        { sv: 'ko', en: 'cow', es: 'vaca', pt: 'vaca', ru: 'корова', zh: '牛|niú' },
+        { sv: 'gris', en: 'pig', es: 'cerdo', pt: 'porco', ru: 'свинья', zh: '猪|zhū' },
+        { sv: 'fågel', en: 'bird', es: 'pájaro/ave', pt: 'pássaro/ave', ru: 'птица', zh: '鸟|niǎo' },
+        { sv: 'fisk', en: 'fish', es: 'pez', pt: 'peixe', ru: 'рыба', zh: '鱼|yú' },
+        { sv: 'mus', en: 'mouse', es: 'ratón', pt: 'rato', ru: 'мышь', zh: '老鼠|lǎoshǔ' },
+        { sv: 'björn', en: 'bear', es: 'oso', pt: 'urso', ru: 'медведь', zh: '熊|xióng' },
+        { sv: 'varg', en: 'wolf', es: 'lobo', pt: 'lobo', ru: 'волк', zh: '狼|láng' },
+        { sv: 'räv', en: 'fox', es: 'zorro', pt: 'raposa', ru: 'лиса', zh: '狐狸|húli' },
+        { sv: 'kanin', en: 'rabbit', es: 'conejo', pt: 'coelho', ru: 'кролик', zh: '兔子|tùzi' },
+        { sv: 'får', en: 'sheep', es: 'oveja', pt: 'ovelha', ru: 'овца', zh: '绵羊|miányáng' },
+        { sv: 'get', en: 'goat', es: 'cabra', pt: 'cabra', ru: 'коза', zh: '山羊|shānyáng' },
+      ],
+    },
+  ],
+});
