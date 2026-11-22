@@ -73,7 +73,9 @@ Man ska direkt kunna se hur stort området är, var man befinner sig, vad som ko
 ### 15. Holistisk kunskap – allt hänger ihop
 Kunskap från ett ställe i spelet ska kopplas till kunskap från ett helt annat: historia till geografi, geografi till fysik, matte till verkliga beslut. Spelet ska kunna visa *att* och *hur* saker hänger ihop – och låta en använda kunskap från flera håll samtidigt.
 Grunden är att innehållet beskrivs som **strukturerad kunskap** (saker med egenskaper: årtal, plats, storlek, kategori, formel), inte bara som frågor och svar. Då kan kopplingar och nya frågor skapas automatiskt.
-Ett viktigt drag: visa **varför man borde kunna svaret** – vilka saker man redan klarat som leder fram till det. Det bygger självförtroende: man kan mer än man tror.
+Att kunna delarna är inte samma sak som att kunna kombinera dem – det är en egen förmåga. Det spelet räknar ut att man *borde* klara är därför en **förutsägelse som testas** med korsfrågor, inte en sanning.
+
+Ett viktigt drag: visa **varför man borde kunna svaret** – vilka saker man redan klarat som leder fram till det. Det bygger självförtroende: man kan mer än man tror. Facit ska vara **visuellt** – en karta där man själv ser vilka kunskaper från vilka ämnen som möts – och samma karta ska visa **framåt**: vad man kan lära sig längre fram, även på tvärs med andra ämnen, om man lär sig ett visst område.
 
 ## Speltyperna som byggstenar
 
