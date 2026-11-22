@@ -70,6 +70,7 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - Fler språk/ord; röstuppläsning av ord.
 
 **Nästa att bygga (att göra-listan, 22 nov 2026)**
+- **Flera användare (NÄSTA SESSION, prio):** enkla profiler så att flera kan spela på samma dator/webbläsare utan att progressen blandas ihop. Profilväljare på startsidan (namn + emoji, "+ Ny spelare"), progress sparas per profil (t.ex. `larospel-v1:<profil>`), befintlig progress flyttas till första profilen, aktiv profil syns i sidhuvudet och kan bytas. Prototypnivå: en handfull användare, ingen inloggning eller säkerhet.
 - **Inplaceringstest:** snabbtest i början som låser upp det man redan kan (t.ex. hoppa direkt till rätt steg i matteträdet).
 - **Smart repetition (spaced repetition):** det man kan återkommer med växande mellanrum (1 dag, 3 dagar, 1 vecka, 1 månad) så länge man svarar rätt; en kort daglig repetitionsrunda.
 - **Anpassad tröskel:** snabbt och säkert rätt direkt kan räcka för "kan"; tvekan eller fel kräver fler.
