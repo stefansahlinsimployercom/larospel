@@ -132,8 +132,8 @@ function showHome() {
   app.innerHTML = `<h2>Välj ämne</h2><div class="tracks"></div>`;
   const box = app.querySelector('.tracks');
   TRACKS.forEach(t => {
-    const n = (t.categories || t.branches || t.sets || t.recipes || t.cases || t.chains || t.builds || t.quizzes || []).length;
-    const sub = n ? `${n} ${t.categories ? 'kategorier' : t.branches ? 'grenar' : t.sets ? 'sorteringsspel' : t.recipes ? 'recept' : t.cases ? 'fall' : t.chains ? (n === 1 ? 'kedja' : 'kedjor') : t.builds ? 'konstruktioner' : 'quiz'}` : 'Kommer snart';
+    const n = (t.categories || t.branches || t.sets || t.recipes || t.cases || t.chains || t.builds || t.claims || t.quizzes || []).length;
+    const sub = n ? `${n} ${t.categories ? 'kategorier' : t.branches ? 'grenar' : t.sets ? 'sorteringsspel' : t.recipes ? 'recept' : t.cases ? 'fall' : t.chains ? (n === 1 ? 'kedja' : 'kedjor') : t.builds ? 'konstruktioner' : t.claims ? 'påståenden' : 'quiz'}` : 'Kommer snart';
     box.appendChild(card(`<strong>${t.icon} ${t.name}</strong><small>${sub}</small>`, n ? () => showTrack(t) : null));
   });
 }
@@ -148,6 +148,7 @@ function showTrack(track) {
   if (track.type === 'diag') return showDiagTrack(track);
   if (track.type === 'chain') return showChainTrack(track);
   if (track.type === 'build') return showBuildTrack(track);
+  if (track.type === 'bluff') return showBluffTrack(track);
   if (track.categories) return showVocabTrack(track);
   app.innerHTML = `<button class="back">← Alla ämnen</button><h2>${track.icon} ${track.name}</h2><div class="quizzes"></div>`;
   app.querySelector('.back').onclick = showHome;
@@ -369,7 +370,7 @@ function showResults() {
   const who = Profiles.active();
   app.innerHTML = `<button class="back">← Alla ämnen</button><h2>📊 Resultat ${who ? `<small class="lvl">${who.emoji} ${esc(who.name)}</small>` : ''}</h2>`;
   app.querySelector('.back').onclick = showHome;
-  const knowledge = vocabStatsHtml() + eventsStatsHtml() + mathStatsHtml() + sortStatsHtml() + geoStatsHtml() + recipeStatsHtml() + diagStatsHtml() + chainStatsHtml() + buildStatsHtml();
+  const knowledge = vocabStatsHtml() + eventsStatsHtml() + mathStatsHtml() + sortStatsHtml() + geoStatsHtml() + recipeStatsHtml() + diagStatsHtml() + chainStatsHtml() + buildStatsHtml() + bluffStatsHtml();
   if (!all.length && !knowledge) {
     app.insertAdjacentHTML('beforeend', '<p>Inga spelade quiz ännu.</p><p><button class="btn secondary" id="import">📥 Ladda upp sparad progress</button></p>');
     app.querySelector('#import').onclick = startImport;
