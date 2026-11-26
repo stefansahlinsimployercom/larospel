@@ -169,9 +169,25 @@ function wireNext(root, track, onBack) {
     (mode === 'ord' && nx.stories ? playStory : mode !== 'snabb' && nodeHasSteps(nx) ? playSteps : playQuick)(track, nx, onBack);
   });
 }
+// "Det här kan du lösa nu" – egen knapp som öppnar en inforuta (använder INFO/showInfo från game.js)
+function unlockHtml(node, done) {
+  const u = node.unlocks;
+  return `<p>${esc(node.desc || '')}</p>
+    <h4>🔓 ${done ? 'Det här kan du lösa nu' : 'Det här kan du lösa när du klarat steget'}: ${esc(u.title)}</h4>
+    <ul>${u.problems.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
+    <p class="ulex">💬 <strong>Exempel:</strong> ${esc(u.example)}</p>`;
+}
+function unlockLink(node, done, label = '🔓 Vad kan jag lösa?') {
+  if (!node.unlocks) return '';
+  const k = 'i' + (++infoSeq);
+  INFO.set(k, { title: node.name, html: unlockHtml(node, done) });
+  return `<span class="ibtn ulink" role="button" tabindex="0" data-info="${k}" title="Vad låser steget upp?">${label}</span>`;
+}
+
 function doneMsg(track, node) {
   const opened = allNodes(track).filter(n => n.req.includes(node.id) && isUnlocked(n)).map(n => n.name);
-  return '<br>🏆 Steget är klart!' + (opened.length ? ` Nu upplåst: <strong>${opened.map(esc).join(', ')}</strong>` : '');
+  return '<br>🏆 Steget är klart!' + (opened.length ? ` Nu upplåst: <strong>${opened.map(esc).join(', ')}</strong>` : '')
+    + (node.unlocks ? `<br>🔓 Nu kan du lösa: <strong>${esc(node.unlocks.title)}</strong> ${unlockLink(node, true, 'Visa exempel')}` : '');
 }
 
 // ---------- Trädvy ----------
@@ -223,7 +239,8 @@ function showMathTree(track) {
         if (!isOrd && ordDone) status += ' · 📖✅';
         if (unlocked && !reqMet(node)) status += ' · 🔓 admin';
         const pct = st.done ? 100 : Math.round(100 * Math.min(st.streak, MATH_GOAL) / MATH_GOAL);
-        const el = card(`<strong>${esc(node.name)}${node.desc ? infoBtn(node.name, `<p>${esc(node.desc)}</p>`) : ''}</strong><small>${status}</small>
+        const el = card(`<strong>${esc(node.name)}${node.desc && !node.unlocks ? infoBtn(node.name, `<p>${esc(node.desc)}</p>`) : ''}</strong><small>${status}</small>
+          ${node.unlocks && !node.soon ? `<small class="unl">${unlockLink(node, st.done)}</small>` : ''}
           ${open ? `<div class="progress"><div style="width:${pct}%"></div></div>` : ''}`,
           open ? () => {
             const back = () => showMathTree(track);

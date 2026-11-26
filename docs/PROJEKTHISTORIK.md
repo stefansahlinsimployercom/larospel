@@ -30,6 +30,7 @@ Se även [DESIGNPRINCIPER.md](../DESIGNPRINCIPER.md).
 16. **Admin-läge** (PIN) som låser upp alla steg i träden.
 17. **Publicering:** GitHub-repo och GitHub Pages.
 18. **Spelarprofiler och flytt mellan datorer (26 nov 2026):** "Vem spelar?" med egna profiler (namn + emoji), progress och admin-läge per profil, befintlig progress flyttades automatiskt till en första profil (originalet sparas som säkerhetskopia). Spara ner progress som fil och ladda upp den på en annan dator – som ny spelare eller sammanslagen (det bästa behålls per sak).
+19. **"Det här kan du lösa nu" i matteträdet (26 nov 2026):** varje mattesteg har en 🔓-knapp som visar vilken kategori av verkliga problem steget låser upp, med exempelfrågor och ett räknat exempel. När ett steg blir klart visas "🔓 Nu kan du lösa: …".
 
 ## Viktiga beslut och lärdomar
 
@@ -78,7 +79,6 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - **Kunskapskarta:** visuell överblick för varje ämne och en samlad karta på startsidan – hur stort området är, var man är, framsteg i färg, vad som kommer härnäst och var nya områden hänger fast.
 - **"Varför?"-lager i matte:** när ett steg är klart – "Det här kan du lösa nu": vilken kategori av verklighetsproblem steget låser upp, med ett exempel som ordproblem. Även omvänt: börja i en verklig fråga ("Lönar sig elbilen?") och se i trädet vilka steg som behövs.
 - **"Varför?"-lager i allmänbildning:** visa kopplingar mellan saker (t.ex. Konstantinopels fall → nya handelsvägar → Columbus) och en *rimlighetskoll* där man använder det man kan för att bedöma om påståenden stämmer.
-- **"Det här kan du lösa nu" som ⓘ i matteträdet:** varje steg får en inforuta med vilken kategori av verklighetsproblem det låser upp, plus ett exempel (t.ex. `ax + b = cx + d` → brytpunkter: vilket abonnemang lönar sig?).
 - **Kopplingar mellan ämnen:** "Det här hänger ihop med…" efter ett svar, och trådar i kunskapskartan. Särskilt spännande med årtal: orsak–verkan mellan händelser (Konstantinopels fall 1453 → handelsvägar stängs → Columbus 1492) och samtidighet ("vad hände i världen samtidigt?").
 - **Uppskattningsfrågor (guesstimates) över flera ämnen:** frågor som kombinerar sådant man redan *visat* att man kan i olika delar av spelet – t.ex. "Hur många år efter Columbus sjönk Vasaskeppet?" (historia + räkning) eller "Hur mycket lägesenergi får en klättrare på 70 kg från havsnivå till Everests topp?" (geografi + fysik). Bedöms på storleksordning. Facit visar *varför man borde kunna det*: vilka frågor man klarat som leder fram dit.
 - **Grund för allt ovan:** beskriv innehållet som strukturerad kunskap (en kunskapsgraf: saker med egenskaper och kopplingar), så att kopplingar och korsfrågor kan genereras automatiskt.

@@ -355,4 +355,36 @@
   };
   window.TRACKS.find(t => t.id === 'matte').branches.flatMap(b => b.nodes)
     .forEach(n => { if (ST[n.id]) n.stories = ST[n.id]; });
+
+  // ---------- "Det här kan du lösa nu" ----------
+  // Vilken sorts verkliga problem varje steg låser upp – svaret på "varför ska jag kunna det här?"
+  //   title: problemkategorin, problems: exempel på frågor, example: ett konkret ordproblem med lösning
+  const UNLOCKS = {
+    'ar-tabell': { title: 'Snabb huvudräkning', problems: ['Totalpris när du köper flera av samma sak', 'Hur mycket det blir per vecka, månad eller år', 'Area för rum och ytor'],
+      example: 'Du köper 7 glassar för 8 kr styck. Vad kostar det? (7 · 8 = 56 kr)' },
+    'ar-neg': { title: 'Plus och minus runt noll', problems: ['Temperaturer under noll – hur mycket varmare blev det?', 'Saldo och skulder på kontot', 'Höjder under havsytan'],
+      example: 'Det var −7 °C på morgonen och +4 °C på eftermiddagen. Hur många grader steg det? (4 − (−7) = 11 grader)' },
+    al1: { title: 'Hitta det som saknas', problems: ['Hur mycket har jag kvar av budgeten?', 'Hur mycket fattas till målet?', 'Hur gammal var någon vid en viss tidpunkt?'],
+      example: 'Du har sparat 1 350 kr och vill köpa hörlurar för 2 000 kr. Hur mycket fattas? (1 350 + x = 2 000 → x = 650 kr)' },
+    al2: { title: 'Dela lika och pris per styck', problems: ['Vad kostar en sak när du vet totalpriset?', 'Hur mycket blir det per person?', 'Jämförpris per kilo eller liter'],
+      example: '4 kompisar delar på en nota på 1 240 kr. Vad betalar var och en? (4x = 1 240 → x = 310 kr)' },
+    al3: { title: 'Fast + rörlig kostnad', problems: ['Abonnemang, taxi, gym, hyrbil – nästan all prissättning ser ut så här', 'Hur mycket kan jag använda för en viss budget?', 'Lön med grundbelopp plus provision'],
+      example: 'Ett gym kostar 300 kr i startavgift och 80 kr per besök. Hur många gånger kan du gå för 1 100 kr? (80x + 300 = 1 100 → x = 10)' },
+    al4: { title: 'Jämförelser och brytpunkter', problems: ['Vilket abonnemang lönar sig för mig?', 'Lönar sig det dyra alternativet i längden?', 'När kommer någon ikapp?'],
+      example: 'Abonnemang A kostar 99 kr + 2 kr/min, B kostar 249 kr + 0,50 kr/min. Efter hur många minuter lönar sig B? (2x + 99 = 0,5x + 249 → x = 100 minuter)' },
+    al5: { title: 'Paket och grupper', problems: ['Pris per person inklusive avgift', 'Samma tillägg på flera saker', 'Räkna baklänges från en totalsumma'],
+      example: '5 kompisar köper var sin konsertbiljett plus 50 kr i serviceavgift. Totalt 2 250 kr. Vad kostar en biljett? (5(x + 50) = 2 250 → x = 400 kr)' },
+    ge1: { title: 'Rektanglar i vardagen', problems: ['Hur mycket golv, tapet eller färg behövs?', 'Hur långt staket behövs runt en tomt?', 'Får möblerna plats?'],
+      example: 'Ett rum är 4 × 3 m. Hur mycket golv behöver du köpa? (4 · 3 = 12 m²)' },
+    ge2: { title: 'Trianglar', problems: ['Yta på gavlar, tak och trekantiga tomter', 'Hur mycket tyg som går åt till ett segel eller en vimpel'],
+      example: 'En husgavel är en triangel med basen 8 m och höjden 3 m. Hur stor yta ska målas? (8 · 3 / 2 = 12 m²)' },
+    ge3: { title: 'Cirklar', problems: ['Vilken pizza är mest prisvärd?', 'Hur långt rullar ett hjul på ett varv?', 'Yta för runda bord, rabatter och pooler'],
+      example: 'Är en pizza på 40 cm mer än dubbelt så stor som en på 28 cm? (Ja: ca 1 256 cm² mot 615 cm²)' },
+    ge4: { title: 'Diagonaler med Pythagoras', problems: ['Får TV:n plats? (skärmar mäts diagonalt)', 'Hur lång stege behövs?', 'Kortaste vägen tvärs över ett fält'],
+      example: 'En stege står 1,5 m från väggen och når 2 m upp. Hur lång är stegen? (√(1,5² + 2²) = 2,5 m)' },
+    ge5: { title: 'Pythagoras baklänges', problems: ['Hur högt når en stege av en viss längd?', 'Hur bred är en skärm med en viss diagonal och höjd?'],
+      example: 'En 5 m lång stege står 3 m från väggen. Hur högt upp når den? (√(5² − 3²) = 4 m)' },
+  };
+  window.TRACKS.find(t => t.id === 'matte').branches.flatMap(b => b.nodes)
+    .forEach(n => { if (UNLOCKS[n.id]) n.unlocks = UNLOCKS[n.id]; });
 })();
