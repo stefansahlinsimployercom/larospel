@@ -33,6 +33,10 @@ python server.py
 
 Gemensamt för alla: progress sparas i webbläsaren (ett ord/en plats/ett steg räknas som "kan" efter två rätt i rad), smart repetition (det man kan kommer tillbaka efter 1, 3, 7, 30 och 90 dagar), "träna bara det jag inte kan", ⓘ-inforutor med fördjupning, ledtrådar och facit, samt en resultatsida.
 
+## Nivåer och utveckling
+
+Spelarkortet överst på startsidan visar din nivå, hur mycket XP som saknas till nästa och hur många dagar i rad du har spelat 🔥. Klicka på det för **🏆 Min utveckling**: var du står i varje ämne, vad du har lärt dig under en vald period (idag, 7 dagar, 30 dagar, i år eller allt) och en topplista där du kan jämföra dig med andra spelare på datorn – eller med en vän genom att ladda upp vännens sparade progressfil.
+
 ## Kunskapskartan
 
 🗺️ *Min kunskapskarta* på startsidan visar allt i spelet på en gång – en ruta per sak, färgad efter om du kan den, håller på att lära dig den eller borde repetera den.
@@ -67,6 +71,7 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 - `index.html`, `style.css` – sidan och utseendet
 - `game.js` – gemensam motor (lagring, startsida, resultat, ordquiz, inforutor)
 - `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `placement.js`, `knowledgemap.js`, `crosslinks.js`, `competence.js`, `profiles.js` – en fil per speltyp
+- `gamify.js` – nivåer, XP, svit, utveckling per period och topplista
 - `contrib.js` – bidrag från spelare (formulär, märkning, filter, dela som fil)
 - `generators.js` – skapar nya frågor ur spelets kunskap
 - `tools/validera.js` – kontrollerar innehållet

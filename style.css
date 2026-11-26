@@ -596,3 +596,48 @@ body.admin header { box-shadow: inset 0 -4px 0 #ffd84d; }
 .cicon input { text-align: center; font-size: 1.3rem; }
 .cgrow { flex: 1; }
 .cpeople .check, .clangs .check { margin-left: 0; }
+
+/* Gamifiering: nivå, XP, svit, period och topplista */
+.gentry, .ghero { display: flex; align-items: center; gap: 14px; background: linear-gradient(135deg, #2b3a55, #44587d); color: #fff; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; }
+.gentry { cursor: pointer; transition: transform .15s; }
+.gentry:hover { transform: translateY(-2px); }
+.gentry .small, .ghero .small { color: #dfe6f3; font-size: .85rem; }
+.gmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.glvl { flex: none; width: 54px; height: 54px; border-radius: 50%; background: #ffcf4a; color: #2b3a55; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 0 0 3px rgba(255,255,255,.35); }
+.glvl span { font-size: 1.4rem; font-weight: 800; }
+.glvl small { font-size: .65rem; text-transform: uppercase; letter-spacing: .05em; }
+.glvl.big { width: 72px; height: 72px; }
+.glvl.big span { font-size: 2rem; }
+.xpbar { height: 10px; background: rgba(255,255,255,.25); border-radius: 6px; overflow: hidden; }
+.xpbar div { height: 100%; background: #ffcf4a; border-radius: 6px; transition: width .4s; }
+.gstreak { flex: none; text-align: center; display: flex; flex-direction: column; align-items: center; font-size: 1.3rem; line-height: 1.1; }
+.gstreak strong { font-size: 1.3rem; }
+.gstreak small { font-size: .7rem; color: #dfe6f3; }
+.gstreak.off { filter: grayscale(1); opacity: .6; }
+.gwhere { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; }
+.gw { display: grid; grid-template-columns: 150px 1fr 56px; align-items: center; gap: 8px; }
+.gw .progress { margin: 0; }
+.gperiods, .gsort { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.gstats { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin: 10px 0; }
+.gstat { background: #fff; border: 1px solid #e1e5ee; border-radius: 10px; padding: 8px; text-align: center; display: flex; flex-direction: column; }
+.gstat span { font-size: 1.2rem; }
+.gstat strong { font-size: 1.4rem; color: #2b3a55; }
+.gstat small { color: #667; font-size: .8rem; }
+.gchart { display: flex; align-items: flex-end; gap: 3px; height: 140px; padding: 8px; background: #fff; border: 1px solid #e1e5ee; border-radius: 10px; }
+.gcol { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; min-width: 0; }
+.gbar { width: 100%; max-width: 34px; min-height: 2px; background: #4a7bd0; border-radius: 4px 4px 0 0; position: relative; }
+.gbar span { position: absolute; top: -16px; left: 0; right: 0; text-align: center; font-size: .7rem; color: #2b3a55; font-weight: 700; }
+.gcol small { font-size: .65rem; color: #667; margin-top: 2px; white-space: nowrap; }
+.glgroup { margin: 8px 0; }
+.glgroup > div { margin-top: 4px; }
+.gboard { width: 100%; border-collapse: collapse; margin: 6px 0; background: #fff; }
+.gboard th, .gboard td { padding: 6px 8px; border-bottom: 1px solid #eee; text-align: left; font-size: .92rem; }
+.gboard th { font-size: .8rem; color: #667; }
+.gboard tr.me { background: #fff8de; font-weight: 600; }
+#toasts { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; pointer-events: none; }
+.toast { background: #2b3a55; color: #fff; padding: 8px 14px; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,.2); font-weight: 600; animation: tin .3s ease; transition: opacity .5s, transform .5s; }
+.toast.big { background: #ffcf4a; color: #2b3a55; font-size: 1.15rem; padding: 14px 20px; }
+.toast.out { opacity: 0; transform: translateY(10px); }
+@keyframes tin { from { opacity: 0; transform: translateY(10px); } }
+@media (max-width: 600px) { .gw { grid-template-columns: 110px 1fr 48px; } .gboard th:nth-child(8), .gboard td:nth-child(8) { display: none; } }
+.gchart + p { margin-top: 4px; }

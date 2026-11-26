@@ -66,7 +66,8 @@ function playPlacement(track, onBack) {
       if (inRow >= PLACE_NEEDED) {
         const d = Store.load(); d.math ||= {};
         const s = d.math[node.id] || { streak: 0, done: false, ok: 0, fail: 0 };
-        d.math[node.id] = { ...s, streak: Math.max(s.streak, MATH_GOAL), done: true, ok: s.ok + PLACE_NEEDED };
+        if (!s.done) Store.logAdd(d, { p: 1, x: 10 });
+        d.math[node.id] = { ...s, streak: Math.max(s.streak, MATH_GOAL), done: true, ok: s.ok + PLACE_NEEDED, placedAt: s.placedAt || (s.done ? undefined : Store.now()) };
         Store.save(d);
         status.set(node.id, 'done');
         feed.innerHTML = `<span class="ok">✅ ${esc(node.name)} – klart! Vidare uppåt…</span>`;

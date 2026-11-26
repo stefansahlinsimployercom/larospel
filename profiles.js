@@ -125,6 +125,13 @@ function mergeData(base, inc) {
     const t = out.math[id] || { streak: 0, done: false, ok: 0, fail: 0 };
     out.math[id] = { streak: Math.max(t.streak, s.streak || 0), done: t.done || !!s.done, ok: Math.max(t.ok, s.ok || 0), fail: Math.max(t.fail, s.fail || 0) };
   });
+  out.log ||= {};
+  Object.entries(inc.log || {}).forEach(([day, x]) => {
+    const t = out.log[day] ||= {};
+    Object.entries(x).forEach(([k, v]) => { t[k] = Math.max(t[k] || 0, v); });
+  });
+  out.xpBase = Math.max(out.xpBase || 0, inc.xpBase || 0);
+  Object.entries(inc.stats || {}).forEach(([pk, m]) => { const t = (out.stats ||= {})[pk] ||= {}; Object.entries(m).forEach(([k, s]) => { if (!t[k]) t[k] = s; }); });
   const seen = new Set(out.attempts.map(a => a.quiz + '|' + a.at));
   (inc.attempts || []).forEach(a => { if (!seen.has(a.quiz + '|' + a.at)) out.attempts.push(a); });
   out.attempts.sort((a, b) => (a.at < b.at ? -1 : 1));

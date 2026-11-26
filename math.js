@@ -137,9 +137,13 @@ function mathRecord(id, result) {
   d.math ||= {};
   const s = d.math[id] ||= { streak: 0, done: false, ok: 0, fail: 0 };
   let justDone = false;
-  if (result === 'ok') { s.ok++; s.streak++; if (!s.done && s.streak >= MATH_GOAL) { s.done = true; justDone = true; } }
+  const xpBefore = typeof xpOf === 'function' ? xpOf(d) : 0;
+  if (result === 'ok') { s.ok++; s.streak++; if (!s.done && s.streak >= MATH_GOAL) { s.done = true; justDone = true; s.doneAt = Store.now(); } }
   if (result === 'fail') { s.fail++; s.streak = 0; }
+  if (result !== 'help') Store.logAdd(d, { a: 1, c: result === 'ok' ? 1 : 0, x: result === 'ok' ? 1 : 0 });
+  if (justDone) Store.logAdd(d, { l: 1, x: 30 });
   Store.save(d);
+  if (typeof gameAfterSave === 'function') gameAfterSave(xpBefore, d);
   return { state: s, justDone };
 }
 function allNodes(track) { return track.branches.flatMap(b => b.nodes); }

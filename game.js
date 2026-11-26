@@ -65,9 +65,9 @@ const Store = {
   load() {
     try {
       const d = this.KEY && JSON.parse(localStorage.getItem(this.KEY));
-      if (d && d.version === 1) { d.known ||= {}; this.ensureReview(d); return d; }
+      if (d && d.version === 1) { d.known ||= {}; this.ensureReview(d); this.ensureXp(d); return d; }
     } catch {}
-    return { version: 1, settings: {}, attempts: [], known: {}, review: {} };
+    return this.ensureXp({ version: 1, settings: {}, attempts: [], known: {}, review: {} });
   },
 
   // ---------- Smart repetition (glömskekurvan) ----------
@@ -86,6 +86,12 @@ const Store = {
     }));
     this.save(d);
   },
+  // ---------- Daglig logg (för nivåer, XP och "vad har jag lärt mig") ----------
+  // log: { 'YYYY-MM-DD': { a: svar, c: rätt, l: nya saker lärda, rl: återlärda, r: lyckade repetitioner, p: inplacerade, x: XP } }
+  // xpBase = XP för allt man gjort innan loggen fanns (räknas ut en gång ur progressen, se gamify.js)
+  ensureXp(d) { if (d.xpBase == null) d.xpBase = typeof stateXP === 'function' ? stateXP(d) : 0; return d; },
+  dayKey(t = this.now()) { return new Date(t).toLocaleDateString('sv-SE'); },
+  logAdd(d, f) { const day = (d.log ||= {})[this.dayKey()] ||= {}; Object.entries(f).forEach(([k, v]) => { if (v) day[k] = (day[k] || 0) + v; }); },
   // Vad spelaren kan just nu: saker som är "dags att repetera" räknas tillfälligt som inte kunna
   // (ett rätt svar räcker för att de ska räknas som kunna igen).
   known(pk) {
@@ -113,6 +119,7 @@ const Store = {
     const rv = d.review[pk] ||= {};
     const st = (d.stats ||= {})[pk] ||= {};
     const t = this.now(), DAY = 864e5, last = this.REVIEW_DAYS.length - 1;
+    const xpBefore = typeof xpOf === 'function' ? xpOf(d) : 0;
     let fresh = 0;
     results.forEach(({ key, ok }) => {
       const before = m[key] || 0;
@@ -121,18 +128,22 @@ const Store = {
       s.tries++;
       if (!ok) s.wrong++;
       const wasDue = rv[key] && rv[key].due <= t;
+      this.logAdd(d, { a: 1, c: ok ? 1 : 0, x: ok ? 1 : 0 });
+      if (ok && wasDue && before >= KNOWN_AT) this.logAdd(d, { r: 1, x: 3 });
       if (ok && before >= KNOWN_AT && !wasDue) s.waste = (s.waste || 0) + 1;
       if (ok) m[key] = firstTime ? Math.max(KNOWN_AT, before + 1) : before + 1;
       else m[key] = s.ever ? 0 : -1;
       if (!ok) delete rv[key];
       else if (before < KNOWN_AT && m[key] >= KNOWN_AT) {
         fresh++;
-        if (!s.ever) { s.ever = true; s.knownAt = t; s.triesToKnow = s.tries; s.direct = firstTime; }
+        if (!s.ever) { s.ever = true; s.knownAt = t; s.triesToKnow = s.tries; s.direct = firstTime; this.logAdd(d, { l: 1, x: 10 }); }
+        else { s.relearnedAt = t; this.logAdd(d, { rl: 1, x: 5 }); }
         rv[key] = { step: 0, due: t + DAY * this.REVIEW_DAYS[0] };
       }
       else if (wasDue) { const n = Math.min(rv[key].step + 1, last); rv[key] = { step: n, due: t + DAY * this.REVIEW_DAYS[n] }; }
     });
     this.save(d);
+    if (typeof gameAfterSave === 'function') gameAfterSave(xpBefore, d);
     return fresh;
   },
   resetKnown(pk, catId) {
@@ -182,12 +193,18 @@ function showHome() {
   stopTimer();
   if (!Profiles.active()) return showProfiles();
   if (typeof applyContrib === 'function') applyContrib();
-  app.innerHTML = `<div id="review"></div><div id="kmslot"></div><div id="contribslot"></div><h2>Välj ämne</h2><div class="tracks"></div>`;
+  app.innerHTML = `<div id="gameslot"></div><div id="review"></div><div id="kmslot"></div><div id="contribslot"></div><h2>Välj ämne</h2><div class="tracks"></div>`;
   // Kunskapskartan (knowledgemap.js): överblick över allt
   if (typeof kmEntryHtml === 'function') {
     const slot = app.querySelector('#kmslot');
     slot.innerHTML = kmEntryHtml();
     slot.querySelector('#kmentry').onclick = showKnowledgeMap;
+  }
+  // Nivå, XP och svit (gamify.js)
+  if (typeof gameEntryHtml === 'function') {
+    const gs = app.querySelector('#gameslot');
+    gs.innerHTML = gameEntryHtml();
+    gs.querySelector('#gameentry').onclick = () => showProgress();
   }
   // Bidrag från spelare (contrib.js)
   if (typeof contribEntryHtml === 'function') {
