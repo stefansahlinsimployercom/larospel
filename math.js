@@ -241,7 +241,7 @@ function showMathTree(track) {
         if (!isOrd && ordDone) status += ' · 📖✅';
         if (unlocked && !reqMet(node)) status += ' · 🔓 admin';
         const pct = st.done ? 100 : Math.round(100 * Math.min(st.streak, MATH_GOAL) / MATH_GOAL);
-        const el = card(`<strong>${esc(node.name)}${node.desc && !node.unlocks ? infoBtn(node.name, `<p>${esc(node.desc)}</p>`) : ''}</strong><small>${status}</small>
+        const el = card(`<strong>${esc(node.name)}${node.desc && !node.unlocks ? infoBtn(node.name, `<p>${esc(node.desc)}</p>${(typeof crossLinksHtml === 'function' ? crossLinksHtml({ t: 'node', id: node.id }) : '')}`) : ''}</strong><small>${status}</small>
           ${node.unlocks && !node.soon ? `<small class="unl">${unlockLink(node, st.done)}</small>` : ''}
           ${open ? `<div class="progress"><div style="width:${pct}%"></div></div>` : ''}`,
           open ? () => {

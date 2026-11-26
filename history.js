@@ -335,7 +335,7 @@ function evInfoHtml(ev) {
   return `<p><strong>${fmtYear(ev.y)}</strong>${me ? ` · ${me.cat.icon} ${esc(me.cat.name)}` : ''}</p>
     ${ev.more ? `<p>${esc(ev.more)}</p>` : ''}
     ${links.length ? `<h4>🔗 Hänger ihop med</h4><ul>${links.map(x => `<li><strong>${x.dir}:</strong> ${esc(x.other.ev.e)} (${fmtYear(x.other.ev.y)})<br><span class="small">${esc(x.l.why)}</span></li>`).join('')}</ul>` : ''}
-    ${same.length ? `<h4>🌍 Samtidigt i världen</h4><ul>${same.map(x => `<li>${fmtYear(x.ev.y)}: ${esc(x.ev.e)} <span class="small">(${x.cat.icon} ${esc(x.cat.name)})</span></li>`).join('')}</ul>` : ''}`;
+    ${same.length ? `<h4>🌍 Samtidigt i världen</h4><ul>${same.map(x => `<li>${fmtYear(x.ev.y)}: ${esc(x.ev.e)} <span class="small">(${x.cat.icon} ${esc(x.cat.name)})</span></li>`).join('')}</ul>` : ''}${(typeof crossLinksHtml === 'function' ? crossLinksHtml({ t: 'hist', n: ev.e }) : '')}`;
 }
 
 // ---------- Läget Orsak & verkan ----------

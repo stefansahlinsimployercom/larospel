@@ -50,7 +50,7 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 
 - `index.html`, `style.css` – sidan och utseendet
 - `game.js` – gemensam motor (lagring, startsida, resultat, ordquiz, inforutor)
-- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `placement.js`, `knowledgemap.js`, `profiles.js` – en fil per speltyp
+- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `placement.js`, `knowledgemap.js`, `crosslinks.js`, `profiles.js` – en fil per speltyp
 - `quizzes/*.js` – innehållet (ord, händelser, uppgiftsgeneratorer, recept, fall …). Nytt innehåll läggs till här utan att röra motorerna.
 - `server.py` – liten lokal webbserver utan cache
 

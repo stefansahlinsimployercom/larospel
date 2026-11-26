@@ -221,7 +221,7 @@ function playMap(track, cat, level, onlyUnknown, onBack) {
     app.querySelector('#list').innerHTML = places.map((p, k) => {
       const r = results[k];
       const cls = r ? (r.ok ? 'ok' : 'bad') : k === i ? 'cur' : '';
-      return `<li class="${cls}">${r ? (r.ok ? '✓' : '✗') : k === i ? '▶' : '·'} ${esc(p.n)}${r ? ` <small>${kmStr(r.km)}</small>${p.more ? infoBtn(p.n, `<p>${esc(p.more)}</p>`) : ''}` : ''}</li>`;
+      return `<li class="${cls}">${r ? (r.ok ? '✓' : '✗') : k === i ? '▶' : '·'} ${esc(p.n)}${r ? ` <small>${kmStr(r.km)}</small>${infoBtn(p.n, `${p.more ? `<p>${esc(p.more)}</p>` : ''}${(typeof crossLinksHtml === 'function' ? crossLinksHtml({ t: 'geo', n: p.n }) : '')}`)}` : ''}</li>`;
     }).join('');
   }
   function ask() {
@@ -249,7 +249,7 @@ function playMap(track, cat, level, onlyUnknown, onBack) {
     askEl.innerHTML = ok
       ? `🎯 <strong>${esc(p.n)}</strong> – ${km < 1 ? 'mitt i prick!' : kmStr(km) + ' ifrån'} <span class="plus">+${pts}</span>`
       : `✗ <strong>${esc(p.n)}</strong> – ${kmStr(km)} ifrån (gränsen är ${L.km} km)`;
-    if (p.more) askEl.insertAdjacentHTML('beforeend', ' ' + infoBtn(p.n, `<p>${esc(p.more)}</p>`));
+    askEl.insertAdjacentHTML('beforeend', ' ' + infoBtn(p.n, `${p.more ? `<p>${esc(p.more)}</p>` : ''}${(typeof crossLinksHtml === 'function' ? crossLinksHtml({ t: 'geo', n: p.n }) : '')}`));
     app.querySelector('#pts').textContent = `${points} p`;
     app.querySelector('#streak').textContent = streak >= 2 ? `🔥 ${streak} i rad` : '';
     app.querySelector('#hits').textContent = `${results.filter(r => r.ok).length}/${places.length} träffar`;
@@ -301,7 +301,7 @@ function geoStatsHtml() {
         sum += p.known; tot += p.total;
         const chips = cat.places.map(pl => {
           const s = m[geoKey(cat, pl)] || 0;
-          return `<span class="chip ${s >= KNOWN_AT ? 'known' : s > 0 ? 'half' : ''}">${esc(pl.n)}${pl.more ? infoBtn(pl.n, `<p>${esc(pl.more)}</p>`) : ''}</span>`;
+          return `<span class="chip ${s >= KNOWN_AT ? 'known' : s > 0 ? 'half' : ''}">${esc(pl.n)}${infoBtn(pl.n, `${pl.more ? `<p>${esc(pl.more)}</p>` : ''}${(typeof crossLinksHtml === 'function' ? crossLinksHtml({ t: 'geo', n: pl.n }) : '')}`)}</span>`;
         }).join(' ');
         return `<tr><td>${cat.icon} ${cat.name}<br><small>${p.known}/${p.total}</small>
           <div class="progress"><div style="width:${Math.round(100 * p.known / p.total)}%"></div></div>

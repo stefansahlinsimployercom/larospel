@@ -185,7 +185,7 @@ function playSort(track, set, onlyUnknown, onBack) {
       ${wrong.length ? `<ul class="misslist">${wrong.map(r => `<li><strong>${r.it.e || ''} ${esc(r.it.n)}</strong> → ${esc(basketById[r.it.b].name)}
         <span class="small">(${r.chosen ? 'du valde ' + esc(basketById[r.chosen].name) : 'för sent'}) – ${esc(r.it.why || '')}</span></li>`).join('')}</ul>` : ''}
       <p class="small">Alla i rundan – klicka på ⓘ för att läsa mer:</p>
-      <div>${results.map(r => `<span class="chip ${r.chosen === r.it.b ? 'known' : ''}">${r.it.e || ''} ${esc(r.it.n)}${infoBtn(r.it.n, `<p>${esc(r.it.why || '')}</p><p class="small">Hör till: <strong>${esc(basketById[r.it.b].name)}</strong></p>`)}</span>`).join(' ')}</div>
+      <div>${results.map(r => `<span class="chip ${r.chosen === r.it.b ? 'known' : ''}">${r.it.e || ''} ${esc(r.it.n)}${infoBtn(r.it.n, `<p>${esc(r.it.why || '')}</p><p class="small">Hör till: <strong>${esc(basketById[r.it.b].name)}</strong></p>${(typeof crossLinksHtml === 'function' ? crossLinksHtml({ t: 'zoo', set: set.id, n: r.it.n }) : '')}`)}</span>`).join(' ')}</div>
     </div>`;
     startBtn.textContent = 'Spela igen';
     startBtn.className = 'btn';
@@ -206,7 +206,7 @@ function sortStatsHtml() {
       const kn = its.filter(it => (m[it.n] || 0) >= KNOWN_AT).length;
       const chips = its.map(it => {
         const s = m[it.n] || 0;
-        return `<span class="chip ${s >= KNOWN_AT ? 'known' : s > 0 ? 'half' : ''}" title="${esc(it.why || '')}">${it.e || ''} ${esc(it.n)}${it.why ? infoBtn(it.n, `<p>${esc(it.why)}</p>`) : ''}</span>`;
+        return `<span class="chip ${s >= KNOWN_AT ? 'known' : s > 0 ? 'half' : ''}" title="${esc(it.why || '')}">${it.e || ''} ${esc(it.n)}${infoBtn(it.n, `<p>${esc(it.why || '')}</p>${(typeof crossLinksHtml === 'function' ? crossLinksHtml({ t: 'zoo', set: set.id, n: it.n }) : '')}`)}</span>`;
       }).join(' ');
       return `<tr><td>${b.icon || ''} ${esc(b.name)}<br><small>${kn}/${its.length}</small>
         <div class="progress"><div style="width:${Math.round(100 * kn / its.length)}%"></div></div></td><td>${chips}</td></tr>`;
