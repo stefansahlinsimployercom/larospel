@@ -441,7 +441,7 @@ function showResults() {
   const who = Profiles.active();
   app.innerHTML = `<button class="back">← Alla ämnen</button><h2>📊 Resultat ${who ? `<small class="lvl">${who.emoji} ${esc(who.name)}</small>` : ''}</h2>`;
   app.querySelector('.back').onclick = showHome;
-  const knowledge = learningStatsHtml() + vocabStatsHtml() + eventsStatsHtml() + mathStatsHtml() + sortStatsHtml() + geoStatsHtml() + recipeStatsHtml() + diagStatsHtml() + chainStatsHtml() + buildStatsHtml() + bluffStatsHtml() + estimateStatsHtml();
+  const knowledge = (typeof flagsHtml === 'function' ? flagsHtml() : '') + learningStatsHtml() + vocabStatsHtml() + eventsStatsHtml() + mathStatsHtml() + sortStatsHtml() + geoStatsHtml() + recipeStatsHtml() + diagStatsHtml() + chainStatsHtml() + buildStatsHtml() + bluffStatsHtml() + estimateStatsHtml();
   if (!all.length && !knowledge) {
     app.insertAdjacentHTML('beforeend', '<p>Inga spelade quiz ännu.</p><p><button class="btn secondary" id="import">📥 Ladda upp sparad progress</button></p>');
     app.querySelector('#import').onclick = startImport;
@@ -492,6 +492,7 @@ function showResults() {
   app.querySelector('#clear').onclick = () => {
     if (confirm(`Radera all sparad progress för ${Profiles.active().name}? Andra spelare påverkas inte.`)) { Store.clear(); showResults(); }
   };
+  app.querySelectorAll('[data-unflag]').forEach(b => b.onclick = () => { const f = Store.getSetting('flags') || {}; delete f[b.dataset.unflag]; Store.setSetting('flags', f); showResults(); });
   app.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
     const [pk, cat] = b.dataset.reset.split('|');
     if (confirm('Nollställ vilka ord du kan i den här kategorin?')) { Store.resetKnown(pk, cat); showResults(); }
@@ -502,7 +503,7 @@ function showResults() {
 function vocabStatsHtml() {
   const knownAll = Store.load().known;
   let html = '';
-  TRACKS.filter(t => t.categories).forEach(track => {
+  TRACKS.filter(t => t.languages).forEach(track => { // bara ordlistor (historia och geografi har också kategorier)
     const L = track.languages;
     Object.keys(knownAll).filter(pk => pk.startsWith(track.id + '/')).forEach(pk => {
       const [from, to] = pk.slice(track.id.length + 1).split('-');

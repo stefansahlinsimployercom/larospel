@@ -3,6 +3,30 @@
 // Använder Store, KNOWN_AT, mathState, allNodes, findEvent, fmtYear, esc, shuffle, card, stopTimer, infoBtn, evInfoHtml.
 
 const BLUFF_ROUND = 8;
+
+// ---------- Ursprung och flaggning ----------
+// gen = skapad av generatorerna ur spelets kunskap, ai = skriven av AI (granskas via flaggor)
+const originBadge = x => (x.ai ? '<span class="aibadge">🤖 AI-skapad fråga</span>' : x.gen ? '<span class="aibadge gen">⚙️ Genererad ur spelets kunskap</span>' : '');
+const flags = () => Store.getSetting('flags') || {};
+const isFlagged = id => !!flags()[id];
+function flagHtml() { return '<button class="link flagbtn" id="flagq">🚩 Något fel i frågan?</button>'; }
+function wireFlag(root, item, text) {
+  const b = root.querySelector('#flagq'); if (!b) return;
+  b.onclick = () => {
+    const reason = prompt('Vad är fel? (frivilligt)') ?? null;
+    if (reason === null) return;
+    const f = flags(); f[item.id] = { at: new Date().toISOString(), text, reason, ai: !!item.ai, gen: !!item.gen };
+    Store.setSetting('flags', f);
+    b.replaceWith(Object.assign(document.createElement('span'), { className: 'small', textContent: '🚩 Tack! Frågan visas inte igen för dig och syns under 📊 Resultat.' }));
+  };
+}
+function flagsHtml() {
+  const f = Object.entries(flags());
+  if (!f.length) return '';
+  return `<h3>🚩 Flaggade frågor (${f.length})</h3><p class="small">Frågor du har rapporterat som felaktiga – underlag för granskning. De visas inte i dina spel.</p>
+    <ul class="misslist">${f.map(([id, x]) => `<li>${x.ai ? '🤖 ' : x.gen ? '⚙️ ' : ''}<strong>${esc(x.text)}</strong>${x.reason ? ` – <em>${esc(x.reason)}</em>` : ''}
+      <span class="small">(${new Date(x.at).toLocaleDateString('sv-SE')})</span> <button class="link" data-unflag="${esc(id)}">Ta bort flagga</button></li>`).join('')}</ul>`;
+}
 const BLUFF_TYPES = {
   fakta: 'Fel fakta (person, plats eller grupp)',
   tid: 'Fel tid eller tidsordning',
@@ -59,7 +83,7 @@ function showBluffTrack(track) {
   app.querySelector('.back').onclick = showHome;
   app.querySelector('.quizzes').appendChild(card(`<strong>🕵️ Avslöja bluffen</strong>
     <small>${track.claims.length} påståenden · ${kn === track.claims.length ? '✅ Du kan alla' : `${kn} avslöjade`}</small>
-    <small>🔓 ${ready} bygger helt på sådant du redan visat att du kan</small>
+    <small>🔓 ${ready} bygger helt på sådant du redan visat att du kan · ⚙️ + nya genererade varje runda</small>
     <div class="progress"><div style="width:${Math.round(100 * kn / track.claims.length)}%"></div></div>`,
     () => playBluff(track, () => showBluffTrack(track))));
 }
@@ -69,7 +93,9 @@ function playBluff(track, onBack) {
   stopTimer();
   const m = Store.known('bluff');
   // Okända först – och bland dem de som bygger mest på sådant spelaren redan kan
-  const order = shuffle(track.claims).sort((a, b) =>
+  // Skrivna påståenden + nya genererade ur kunskapsgrafen; flaggade visas inte
+  const pool = [...track.claims, ...(window.genBluffClaims ? genBluffClaims(24) : [])].filter(c => !isFlagged(c.id));
+  const order = shuffle(pool).sort((a, b) =>
     ((m[a.id] || 0) >= KNOWN_AT) - ((m[b.id] || 0) >= KNOWN_AT) || claimReady(b) / b.refs.length - claimReady(a) / a.refs.length);
   const round = order.slice(0, BLUFF_ROUND);
   const results = [];
@@ -92,6 +118,7 @@ function playBluff(track, onBack) {
     const stage = app.querySelector('#stage'), msg = app.querySelector('#msg');
     msg.innerHTML = '';
     stage.innerHTML = `
+      ${originBadge(c)}
       <div class="bubble"><div class="speaker">${SPEAKERS[Math.floor(Math.random() * SPEAKERS.length)]}:</div>
         <div class="claim" id="claim">”${c.parts.map((p, k) => `<span class="cpart" data-k="${k}">${esc(p)}</span>`).join('')}”</div></div>
       <p class="small bready">${ready ? '🔓 Du har redan visat att du kan allt som behövs för att avslöja det här.' : '🧩 Bygger på: ' + [...new Set(refs.map(r => r.where.split(' · ')[0]))].join(', ')}</p>
@@ -150,7 +177,9 @@ function playBluff(track, onBack) {
         <div class="kchain"><div class="small"><strong>Kunskapen som avslöjar det:</strong></div>
           ${refs.map(r => `<div class="kref ${r.ok ? 'ok' : ''}">${r.ok ? '✅' : '📖'} <strong>${esc(r.label)}</strong> <span class="small">${esc(r.where)}${r.ok ? ' – det här kan du!' : ' – öva här för att lära dig'}</span>${r.info ? infoBtn(r.label, r.info) : ''}</div>`).join('')}
         </div>
+        ${flagHtml()}<br>
         <button class="btn" id="nextb">${i + 1 < round.length ? 'Nästa påstående →' : 'Se resultatet →'}</button></div>`;
+      wireFlag(msg, c, c.parts.join(''));
       const nb = msg.querySelector('#nextb');
       nb.onclick = () => { i++; i < round.length ? show() : finish(); };
       nb.focus();

@@ -49,7 +49,7 @@ function showEstimateTrack(track) {
   app.querySelector('.back').onclick = showHome;
   app.querySelector('.quizzes').appendChild(card(`<strong>🎯 Uppskatta!</strong>
     <small>${track.questions.length} frågor · ${kn === track.questions.length ? '✅ Du kan alla' : `${kn} klarade`}</small>
-    <small>🔓 ${ready} bygger helt på sådant du redan visat att du kan</small>
+    <small>🔓 ${ready} bygger helt på sådant du redan visat att du kan · ⚙️ + nya genererade varje runda</small>
     <div class="progress"><div style="width:${Math.round(100 * kn / track.questions.length)}%"></div></div>`,
     () => playEstimate(track, () => showEstimateTrack(track))));
 }
@@ -57,7 +57,8 @@ function showEstimateTrack(track) {
 function playEstimate(track, onBack) {
   stopTimer();
   const m = Store.known('uppskatta');
-  const round = shuffle(track.questions).sort((a, b) =>
+  const pool = [...track.questions, ...(window.genEstimates ? genEstimates(8) : [])].filter(q => !isFlagged(q.id));
+  const round = shuffle(pool).sort((a, b) =>
     ((m[a.id] || 0) >= KNOWN_AT) - ((m[b.id] || 0) >= KNOWN_AT) || estReady(b) / b.refs.length - estReady(a) / a.refs.length).slice(0, EST_ROUND);
   const results = [];
   let i = 0, points = 0;
@@ -77,6 +78,7 @@ function playEstimate(track, onBack) {
     const stage = app.querySelector('#stage'), msg = app.querySelector('#msg');
     msg.innerHTML = '';
     stage.innerHTML = `
+      ${originBadge(q)}
       <div class="symptom"><span class="semo">🎯</span><div><div class="slabel">${ready ? '🔓 Du har redan visat att du kan allt som behövs' : 'Uppskatta'}</div>
         <div class="stext">${esc(q.q)}</div></div></div>
       <form class="estform" id="ef"><input id="guess" inputmode="decimal" autocomplete="off" placeholder="Din uppskattning"> <span class="eunit">${esc(q.unit)}</span>
@@ -113,7 +115,9 @@ function playEstimate(track, onBack) {
           ${ready ? '<p class="small">💡 Allt det här har du redan visat att du kan – i olika delar av spelet. Du visste mer än du trodde!</p>'
             : '<p class="small">📖 Det som saknar bock kan du öva på i respektive ämne – då blir nästa uppskattning lättare.</p>'}
         </div>
+        ${flagHtml()}<br>
         <button class="btn" id="nexte">${i + 1 < round.length ? 'Nästa fråga →' : 'Se resultatet →'}</button></div>`;
+      wireFlag(msg, q, q.q);
       const nb = msg.querySelector('#nexte');
       nb.onclick = () => { i++; i < round.length ? show() : finish(); };
       nb.focus();
