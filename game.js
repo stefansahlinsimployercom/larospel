@@ -102,19 +102,35 @@ const Store = {
     return out;
   },
   // results: [{ key: 'farger/röd', ok: true }] → returnerar antal saker som just blev "kan"
+  // Anpassad tröskel:
+  //   – rätt första gången man någonsin möter något → "kan" direkt (man kunde det redan)
+  //   – fel innan man har lärt sig något → ett extra rätt krävs (värdet blir −1 i stället för 0)
+  // Statistik per sak (stats[pk][key]): first, tries, wrong, ever (har kunnat), knownAt, triesToKnow, waste
+  //   waste = rätt svar på något man redan kunde när det inte var dags att repetera (svinn)
   updateWords(pk, results) {
     const d = this.load();
     const m = d.known[pk] ||= {};
     const rv = d.review[pk] ||= {};
+    const st = (d.stats ||= {})[pk] ||= {};
     const t = this.now(), DAY = 864e5, last = this.REVIEW_DAYS.length - 1;
     let fresh = 0;
     results.forEach(({ key, ok }) => {
       const before = m[key] || 0;
+      const firstTime = !st[key] && before === 0 && !rv[key];
+      const s = st[key] ||= { first: t, tries: 0, wrong: 0, ever: before >= KNOWN_AT };
+      s.tries++;
+      if (!ok) s.wrong++;
       const wasDue = rv[key] && rv[key].due <= t;
-      m[key] = ok ? before + 1 : 0;
+      if (ok && before >= KNOWN_AT && !wasDue) s.waste = (s.waste || 0) + 1;
+      if (ok) m[key] = firstTime ? Math.max(KNOWN_AT, before + 1) : before + 1;
+      else m[key] = s.ever ? 0 : -1;
       if (!ok) delete rv[key];
-      else if (before < KNOWN_AT && m[key] >= KNOWN_AT) { fresh++; rv[key] = { step: 0, due: t + DAY * this.REVIEW_DAYS[0] }; }
-      else if (wasDue) { const s = Math.min(rv[key].step + 1, last); rv[key] = { step: s, due: t + DAY * this.REVIEW_DAYS[s] }; }
+      else if (before < KNOWN_AT && m[key] >= KNOWN_AT) {
+        fresh++;
+        if (!s.ever) { s.ever = true; s.knownAt = t; s.triesToKnow = s.tries; s.direct = firstTime; }
+        rv[key] = { step: 0, due: t + DAY * this.REVIEW_DAYS[0] };
+      }
+      else if (wasDue) { const n = Math.min(rv[key].step + 1, last); rv[key] = { step: n, due: t + DAY * this.REVIEW_DAYS[n] }; }
     });
     this.save(d);
     return fresh;
@@ -425,7 +441,7 @@ function showResults() {
   const who = Profiles.active();
   app.innerHTML = `<button class="back">← Alla ämnen</button><h2>📊 Resultat ${who ? `<small class="lvl">${who.emoji} ${esc(who.name)}</small>` : ''}</h2>`;
   app.querySelector('.back').onclick = showHome;
-  const knowledge = vocabStatsHtml() + eventsStatsHtml() + mathStatsHtml() + sortStatsHtml() + geoStatsHtml() + recipeStatsHtml() + diagStatsHtml() + chainStatsHtml() + buildStatsHtml() + bluffStatsHtml() + estimateStatsHtml();
+  const knowledge = learningStatsHtml() + vocabStatsHtml() + eventsStatsHtml() + mathStatsHtml() + sortStatsHtml() + geoStatsHtml() + recipeStatsHtml() + diagStatsHtml() + chainStatsHtml() + buildStatsHtml() + bluffStatsHtml() + estimateStatsHtml();
   if (!all.length && !knowledge) {
     app.insertAdjacentHTML('beforeend', '<p>Inga spelade quiz ännu.</p><p><button class="btn secondary" id="import">📥 Ladda upp sparad progress</button></p>');
     app.querySelector('#import').onclick = startImport;
@@ -510,6 +526,33 @@ function vocabStatsHtml() {
     });
   });
   return html ? html + `<p class="legend"><span class="chip known">kan</span> <span class="chip half">rätt 1 gång</span> <span class="chip">inte än</span> · Håll muspekaren över ett ord för att se svaret.</p>` : '';
+}
+
+// ---------- Inlärning & svinn (resultatsidan) ----------
+function learningStatsHtml() {
+  const stats = Store.load().stats || {};
+  const all = Object.entries(stats).flatMap(([pk, m]) => Object.entries(m).map(([key, s]) => ({ pk, key, ...s })));
+  if (!all.length) return '';
+  const learned = all.filter(x => x.ever && x.triesToKnow);
+  const direct = learned.filter(x => x.direct).length;
+  const worked = learned.filter(x => !x.direct);
+  const avg = worked.length ? (worked.reduce((s, x) => s + x.triesToKnow, 0) / worked.length) : 0;
+  const waste = all.reduce((s, x) => s + (x.waste || 0), 0);
+  const answers = all.reduce((s, x) => s + x.tries, 0);
+  const label = x => {
+    const t = TRACKS.find(tr => x.pk === tr.id || x.pk.startsWith(tr.id + '/'));
+    return `${t ? t.icon + ' ' : ''}${esc(x.key.split('/').pop().replace(/→/, ' → '))}`;
+  };
+  const hardest = all.filter(x => x.wrong > 0).sort((a, b) => b.wrong - a.wrong || b.tries - a.tries).slice(0, 6);
+  return `<h3>⏱️ Inlärning & svinn</h3>
+    <div class="lstats">
+      <div><strong>${learned.length}</strong><span>saker lärda</span></div>
+      <div><strong>${direct}</strong><span>kunde du direkt – nöttes aldrig</span></div>
+      <div><strong>${worked.length ? avg.toFixed(1).replace('.', ',') : '–'}</strong><span>svar i snitt för att lära in resten</span></div>
+      <div class="${waste ? 'warn' : ''}"><strong>${waste}</strong><span>svar på sådant du redan kunde (svinn${answers ? `, ${Math.round(100 * waste / answers)} % av alla svar` : ''})</span></div>
+    </div>
+    <p class="small">Svinn = övning på något du redan kunde när det inte var dags att repetera. Bocka i "träna bara det jag inte kan" så hålls det nära noll.</p>
+    ${hardest.length ? `<p><strong>Svårast hittills</strong> – här har du fastnat mest:</p><p>${hardest.map(x => `<span class="chip ${x.ever ? 'known' : ''}">${label(x)} <small>${x.wrong} fel</small></span>`).join(' ')}</p>` : ''}`;
 }
 
 // ---------- Inforutor (ⓘ) ----------

@@ -37,6 +37,7 @@ Se även [DESIGNPRINCIPER.md](../DESIGNPRINCIPER.md).
 23. **Smart repetition och inplaceringstest (26 nov 2026):** allt man kan kommer tillbaka efter 1, 3, 7, 30 och 90 dagar (gäller alla spel); ett rätt svar flyttar fram nästa repetition, ett fel gör att det ska läras in igen. "🔁 Dags att repetera" på startsidan, och repetitionerna kommer med automatiskt i "bara det jag inte kan". *🧭 Inplaceringstest* i matte- och fysikträden: två rätt i rad per steg markerar steget som klart, ett fel eller "Vet inte" visar var man ska börja.
 24. **Kunskapskartan (26 nov 2026):** visuell överblick över allt i spelet – en ruta per sak (grön = kan, gul = på gång, orange = dags att repetera, grå = inte än, streckad = kommer snart), grupperat per ämne och område så att man direkt ser hur stort varje område är och var man står. Ingång med procentring på startsidan.
 25. **Kopplingar mellan ämnen (26 nov 2026):** 18 kopplingar historia ↔ geografi ↔ zoologi ↔ fysik (t.ex. orangutang ↔ Borneos regnskog, Mount Everest ↔ lägesenergi och lufttryck, Karl XII ↔ fjällen). Ⓘ i alla dessa ämnen visar "🌐 Kopplingar till andra ämnen", en kopplingskarta (nätverk med en kolumn per ämne) och spelet *Koppla ihop ämnen* – nås från kunskapskartan.
+26. **Anpassad tröskel och mätning av svinn (26 nov 2026):** rätt första gången man möter något = kan direkt; fel innan man lärt sig något kräver ett extra rätt (tre i rad). Statistik per sak (antal svar, fel, svar till inlärning, svinn). Resultatsidan visar *Inlärning & svinn*: saker lärda, hur många man kunde direkt, svar i snitt för att lära in resten, svinn (svar på sådant man redan kunde när det inte var dags att repetera) och de svåraste sakerna.
 
 ## Viktiga beslut och lärdomar
 
@@ -78,8 +79,6 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - Fler språk/ord; röstuppläsning av ord.
 
 **Nästa att bygga (att göra-listan, 22 nov 2026)**
-- **Anpassad tröskel:** snabbt och säkert rätt direkt kan räcka för "kan"; tvekan eller fel kräver fler.
-- **Mät svinnet:** visa tid till att kunna något, så att effekten syns.
 - **"Varför?"-lager i matte:** när ett steg är klart – "Det här kan du lösa nu": vilken kategori av verklighetsproblem steget låser upp, med ett exempel som ordproblem. Även omvänt: börja i en verklig fråga ("Lönar sig elbilen?") och se i trädet vilka steg som behövs.
 - **"Varför?"-lager i allmänbildning:** visa kopplingar mellan saker (t.ex. Konstantinopels fall → nya handelsvägar → Columbus) och en *rimlighetskoll* där man använder det man kan för att bedöma om påståenden stämmer.
 - **Grund för allt ovan:** beskriv innehållet som strukturerad kunskap (en kunskapsgraf: saker med egenskaper och kopplingar), så att kopplingar och korsfrågor kan genereras automatiskt.

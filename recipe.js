@@ -39,7 +39,7 @@ function showRecipeTrack(track) {
       track.recipes.forEach(r => {
         const s = m[r.id] || 0;
         const stars = best[r.id] != null ? '⭐'.repeat(best[r.id]) + '☆'.repeat(4 - best[r.id]) : '☆☆☆☆';
-        const status = s >= KNOWN_AT ? '✅ Du kan receptet' : s ? `${s}/${KNOWN_AT} felfria i rad` : 'Inte provat felfritt än';
+        const status = s >= KNOWN_AT ? '✅ Du kan receptet' : s > 0 ? `${s}/${KNOWN_AT} felfria i rad` : 'Inte provat felfritt än';
         box.appendChild(card(`<strong>${r.icon} ${r.name}</strong><small>${esc(r.desc)}</small><small>Bästa: ${stars} · ${status}</small>`,
           () => playRecipe(track, r, back)));
       });
