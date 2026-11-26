@@ -397,3 +397,25 @@ body.admin header { box-shadow: inset 0 -4px 0 #ffd84d; }
 .admin-box form { display: flex; gap: 8px; margin: 10px 0; }
 .admin-box input { font: inherit; flex: 1; padding: 8px 10px; border: 2px solid #bbc; border-radius: 8px; letter-spacing: 3px; }
 .admin-box input.wrong { border-color: #c0392b; background: #fde2e0; animation: shake .4s; }
+
+/* Profiler */
+#profile { font-weight: 600; }
+.profiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-bottom: 14px; }
+.pcard { position: relative; background: #fff; border: 2px solid #dde; border-radius: 12px; padding: 16px 12px; text-align: center; cursor: pointer; transition: transform .15s, border-color .15s; }
+.pcard:hover { border-color: #2b3a55; transform: translateY(-2px); }
+.pcard.cur { border-color: #2a9d55; background: #f3fcf6; }
+.pcard.new { border-style: dashed; color: #556; }
+.pemo { font-size: 2.6rem; line-height: 1.2; }
+.pname { font-weight: 700; font-size: 1.1rem; margin: 4px 0; }
+.pstat { font-size: .82rem; color: #667; }
+.pact { position: absolute; top: 6px; right: 8px; display: flex; gap: 6px; opacity: .5; }
+.pcard:hover .pact { opacity: 1; }
+.pact span { cursor: pointer; }
+.emojis { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; }
+.emo { font-size: 1.4rem; background: #fff; border: 2px solid transparent; border-radius: 8px; padding: 2px 6px; cursor: pointer; }
+.emo.sel { border-color: #2b3a55; background: #eef0f5; }
+#pf input#pfname, .iopt input[type=text], #iname { font: inherit; padding: 8px 10px; border: 2px solid #bbc; border-radius: 8px; }
+.ipreview { display: flex; gap: 14px; align-items: center; background: #f4f6fb; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; }
+.ipreview .small, .iopt .small { color: #667; font-size: .85rem; }
+.iopt { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.iopt select { font: inherit; padding: 6px; border-radius: 8px; border: 2px solid #bbc; }

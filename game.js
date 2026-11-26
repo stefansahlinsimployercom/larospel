@@ -16,11 +16,55 @@ const app = document.getElementById('app');
 // }
 // Ett ord räknas som "kan" när det klarats KNOWN_AT gånger i rad. En miss nollställer.
 const KNOWN_AT = 2;
+
+// ---------- Profiler ----------
+// Flera spelare på samma dator: varje profil har en egen lagringsplats ('larospel-v1:<id>').
+// Profillistan: { active: id | null, list: [{ id, name, emoji, created }] }
+// Prototypnivå – ingen inloggning eller säkerhet.
+const Profiles = {
+  KEY: 'larospel-profiles',
+  read() {
+    try { const p = JSON.parse(localStorage.getItem(this.KEY)); if (p && Array.isArray(p.list)) return p; } catch {}
+    return { active: null, list: [] };
+  },
+  write(p) { try { localStorage.setItem(this.KEY, JSON.stringify(p)); } catch {} },
+  list() { return this.read().list; },
+  active() { const p = this.read(); return p.list.find(x => x.id === p.active) || null; },
+  setActive(id) { const p = this.read(); p.active = id; this.write(p); },
+  create(name, emoji, data) {
+    const p = this.read();
+    const id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    p.list.push({ id, name, emoji, created: new Date().toISOString() });
+    p.active = id;
+    this.write(p);
+    if (data) { try { localStorage.setItem(Store.keyFor(id), JSON.stringify(data)); } catch {} }
+    return id;
+  },
+  rename(id, name, emoji) { const p = this.read(); const x = p.list.find(y => y.id === id); if (x) { x.name = name; x.emoji = emoji; this.write(p); } },
+  remove(id) {
+    const p = this.read();
+    p.list = p.list.filter(x => x.id !== id);
+    if (p.active === id) p.active = null;
+    this.write(p);
+    try { localStorage.removeItem(Store.keyFor(id)); } catch {}
+  },
+  // Första gången: flytta befintlig progress (från tiden före profiler) till en första profil.
+  // Den gamla nyckeln lämnas kvar orörd som säkerhetskopia.
+  migrate() {
+    const p = this.read();
+    if (p.list.length) return;
+    let old = null;
+    try { old = JSON.parse(localStorage.getItem('larospel-v1')); } catch {}
+    if (old && old.version === 1) this.create('Jag', '🦉', old);
+  },
+};
+
 const Store = {
-  KEY: 'larospel-v1',
+  keyFor: id => 'larospel-v1:' + id,
+  get KEY() { const a = Profiles.active(); return a ? this.keyFor(a.id) : null; },
   load() {
     try {
-      const d = JSON.parse(localStorage.getItem(this.KEY));
+      const d = this.KEY && JSON.parse(localStorage.getItem(this.KEY));
       if (d && d.version === 1) { d.known ||= {}; return d; }
     } catch {}
     return { version: 1, settings: {}, attempts: [], known: {} };
@@ -45,7 +89,7 @@ const Store = {
     else Object.keys(m).forEach(k => { if (k.startsWith(catId + '/')) delete m[k]; });
     this.save(d);
   },
-  save(d) { try { localStorage.setItem(this.KEY, JSON.stringify(d)); } catch {} },
+  save(d) { if (!this.KEY) return; try { localStorage.setItem(this.KEY, JSON.stringify(d)); } catch {} },
   addAttempt(a) { const d = this.load(); d.attempts.push(a); this.save(d); },
   attempts() { return this.load().attempts; },
   best(quizId) {
@@ -54,7 +98,7 @@ const Store = {
   },
   getSetting(k) { return this.load().settings[k]; },
   setSetting(k, v) { const d = this.load(); d.settings[k] = v; this.save(d); },
-  clear() { try { localStorage.removeItem(this.KEY); } catch {} },
+  clear() { if (!this.KEY) return; try { localStorage.removeItem(this.KEY); } catch {} },
 };
 
 // ---------- Hjälpfunktioner ----------
@@ -84,6 +128,7 @@ function card(html, onClick) {
 // ---------- Startsida ----------
 function showHome() {
   stopTimer();
+  if (!Profiles.active()) return showProfiles();
   app.innerHTML = `<h2>Välj ämne</h2><div class="tracks"></div>`;
   const box = app.querySelector('.tracks');
   TRACKS.forEach(t => {
@@ -321,10 +366,15 @@ function playQuiz(quiz, onBack, onFlip) {
 function showResults() {
   stopTimer();
   const all = Store.attempts();
-  app.innerHTML = `<button class="back">← Alla ämnen</button><h2>📊 Resultat</h2>`;
+  const who = Profiles.active();
+  app.innerHTML = `<button class="back">← Alla ämnen</button><h2>📊 Resultat ${who ? `<small class="lvl">${who.emoji} ${esc(who.name)}</small>` : ''}</h2>`;
   app.querySelector('.back').onclick = showHome;
   const knowledge = vocabStatsHtml() + eventsStatsHtml() + mathStatsHtml() + sortStatsHtml() + geoStatsHtml() + recipeStatsHtml() + diagStatsHtml() + chainStatsHtml() + buildStatsHtml();
-  if (!all.length && !knowledge) { app.insertAdjacentHTML('beforeend', '<p>Inga spelade quiz ännu.</p>'); return; }
+  if (!all.length && !knowledge) {
+    app.insertAdjacentHTML('beforeend', '<p>Inga spelade quiz ännu.</p><p><button class="btn secondary" id="import">📥 Ladda upp sparad progress</button></p>');
+    app.querySelector('#import').onclick = startImport;
+    return;
+  }
 
   // Per quiz: antal, bästa, senaste
   const per = new Map();
@@ -360,19 +410,15 @@ function showResults() {
         `<tr><td>${date(a.at)}</td><td>${esc(a.title)}</td><td>${a.score}/${a.total}</td><td>${fmt(a.secs)}</td></tr>`).join('')}
     </table>
     <p class="actions">
-      <button class="btn secondary" id="export">Exportera (JSON)</button>
-      <button class="btn secondary" id="clear">Rensa allt</button>
+      <button class="btn secondary" id="export">💾 Spara ner (exportera)</button>
+      <button class="btn secondary" id="import">📥 Ladda upp (importera)</button>
+      <button class="btn secondary" id="clear">Rensa min progress</button>
     </p>`);
 
-  app.querySelector('#export').onclick = () => {
-    const blob = new Blob([JSON.stringify(Store.load(), null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `larospel-resultat-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-  };
+  app.querySelector('#export').onclick = exportProfile;
+  app.querySelector('#import').onclick = startImport;
   app.querySelector('#clear').onclick = () => {
-    if (confirm('Radera alla sparade resultat?')) { Store.clear(); showResults(); }
+    if (confirm(`Radera all sparad progress för ${Profiles.active().name}? Andra spelare påverkas inte.`)) { Store.clear(); showResults(); }
   };
   app.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
     const [pk, cat] = b.dataset.reset.split('|');
@@ -446,4 +492,4 @@ document.addEventListener('mousedown', e => { if (e.target.closest('.ibtn')) e.s
 
 document.getElementById('home').onclick = showHome;
 document.getElementById('results').onclick = showResults;
-showHome();
+// Starten sker i profiles.js, som laddas sist.

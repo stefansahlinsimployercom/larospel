@@ -31,6 +31,10 @@ python server.py
 
 Gemensamt för alla: progress sparas i webbläsaren (ett ord/en plats/ett steg räknas som "kan" efter två rätt i rad), "träna bara det jag inte kan", ⓘ-inforutor med fördjupning, ledtrådar och facit, samt en resultatsida.
 
+## Spelare och progress
+
+Knappen med din emoji i sidhuvudet byter spelare. Varje spelare har sin egen progress i webbläsaren. Under 📊 Resultat kan du **spara ner** din progress som en fil och **ladda upp** den på en annan dator – som ny spelare eller sammanslagen med en befintlig.
+
 ## Admin-läge
 
 🔒-knappen i sidhuvudet låser upp alla steg i färdighetsträden. PIN-koden sätts i `admin.js` (`ADMIN_PIN`).
@@ -40,7 +44,7 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 
 - `index.html`, `style.css` – sidan och utseendet
 - `game.js` – gemensam motor (lagring, startsida, resultat, ordquiz, inforutor)
-- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js` – en fil per speltyp
+- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `profiles.js` – en fil per speltyp
 - `quizzes/*.js` – innehållet (ord, händelser, uppgiftsgeneratorer, recept, fall …). Nytt innehåll läggs till här utan att röra motorerna.
 - `server.py` – liten lokal webbserver utan cache
 

@@ -29,6 +29,7 @@ Se även [DESIGNPRINCIPER.md](../DESIGNPRINCIPER.md).
 15. **Ryska och kinesiska:** kyrilliskt skärmtangentbord med latinska motsvarigheter (eller skriv translittererat), kinesiska teckenbrickor med pinyin.
 16. **Admin-läge** (PIN) som låser upp alla steg i träden.
 17. **Publicering:** GitHub-repo och GitHub Pages.
+18. **Spelarprofiler och flytt mellan datorer (26 nov 2026):** "Vem spelar?" med egna profiler (namn + emoji), progress och admin-läge per profil, befintlig progress flyttades automatiskt till en första profil (originalet sparas som säkerhetskopia). Spara ner progress som fil och ladda upp den på en annan dator – som ny spelare eller sammanslagen (det bästa behålls per sak).
 
 ## Viktiga beslut och lärdomar
 
@@ -70,8 +71,6 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - Fler språk/ord; röstuppläsning av ord.
 
 **Nästa att bygga (att göra-listan, 22 nov 2026)**
-- **Flera användare (NÄSTA SESSION, prio):** enkla profiler så att flera kan spela på samma dator/webbläsare utan att progressen blandas ihop. Profilväljare på startsidan (namn + emoji, "+ Ny spelare"), progress sparas per profil (t.ex. `larospel-v1:<profil>`), befintlig progress flyttas till första profilen, aktiv profil syns i sidhuvudet och kan bytas. Prototypnivå: en handfull användare, ingen inloggning eller säkerhet.
-- **Spara och ladda progress mellan datorer (NÄSTA SESSION, tillsammans med profiler):** export finns redan (Resultat → "Exportera (JSON)"). Lägg till **Importera**: välj filen → förhandsvisa vad den innehåller → välj att läsa in som ny profil eller slå ihop med en befintlig (behåll det bästa per ord/steg). Exportera per profil. Senare: kopiera en kort kod eller QR-kod i stället för fil.
 - **Inplaceringstest:** snabbtest i början som låser upp det man redan kan (t.ex. hoppa direkt till rätt steg i matteträdet).
 - **Smart repetition (spaced repetition):** det man kan återkommer med växande mellanrum (1 dag, 3 dagar, 1 vecka, 1 månad) så länge man svarar rätt; en kort daglig repetitionsrunda.
 - **Anpassad tröskel:** snabbt och säkert rätt direkt kan räcka för "kan"; tvekan eller fel kräver fler.
