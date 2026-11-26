@@ -462,3 +462,28 @@ body.admin header { box-shadow: inset 0 -4px 0 #ffd84d; }
 .kref { padding: 4px 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .kref.ok { color: #1d7a42; }
 .rnote .small { color: #667; font-size: .88rem; }
+
+/* Uppskattningar */
+.estform { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+.estform input { font: inherit; font-size: 1.2rem; width: 180px; padding: 8px 10px; border: 2px solid #bbc; border-radius: 8px; }
+.estform input.wrong { border-color: #c0392b; background: #fde2e0; animation: shake .4s; }
+.eunit { font-weight: 600; color: #445; }
+.escale { position: relative; height: 70px; margin: 34px 12px 6px; background: #f1f3f8; border-radius: 6px; }
+.escale .ezone { position: absolute; top: 0; bottom: 0; }
+.escale .z10 { left: 25%; right: 25%; background: #d4f3df88; }
+.escale .z2 { left: 42.5%; right: 42.5%; background: #2a9d5555; }
+.escale .emark { position: absolute; top: 0; bottom: 0; width: 3px; transform: translateX(-50%); }
+.escale .emark span { position: absolute; top: -32px; left: 50%; transform: translateX(-50%); font-size: .78rem; text-align: center; white-space: nowrap; line-height: 1.15; }
+.escale .emark.ans { background: #1d7a42; }
+.escale .emark.you { background: #c0392b; }
+.escale .emark.you span { top: auto; bottom: -32px; color: #a8322a; }
+.escale .elab { position: absolute; bottom: 2px; transform: translateX(-50%); font-size: .7rem; color: #889; }
+.center { text-align: center; margin-top: 30px; }
+.efacit { background: #fff; border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
+.eflow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.ebox { border: 2px solid #c9cfdd; border-radius: 10px; padding: 6px 10px; background: #f8f9fc; font-weight: 600; }
+.ebox.ok { border-color: #2a9d55; background: #eafbf0; color: #1d7a42; }
+.ebox.ans { border-color: #2b3a55; background: #2b3a55; color: #fff; }
+.ebox .small { font-weight: 400; font-size: .78rem; color: inherit; opacity: .8; }
+.eplus, .earrow { font-size: 1.3rem; color: #889; font-weight: 700; }
+.esteps { margin: 4px 0 8px; padding-left: 22px; }

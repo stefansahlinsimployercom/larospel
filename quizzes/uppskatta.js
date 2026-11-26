@@ -1,0 +1,46 @@
+// Spår: Uppskattningar – frågor som kombinerar kunskap från flera av spelets ämnen.
+// Svaret bedöms efter hur nära man är (storleksordning), inte exakt.
+//   answer: tal eller funktion (t.ex. beroende på dagens år)
+//   steps:  uträkningen steg för steg (visas i facit)
+//   refs:   kunskapen som behövs – samma format som i Bluffkollen (hist/geo/zoo/node)
+(window.TRACKS ||= []).push({
+  id: 'uppskatta', name: 'Uppskattningar', icon: '🎯', type: 'estimate',
+  questions: [
+    { id: 'columbus-vasa', q: 'Hur många år efter att Columbus nådde Amerika sjönk Vasaskeppet?', unit: 'år', answer: 136,
+      steps: ['Columbus nådde Amerika 1492', 'Vasaskeppet sjönk 1628', '1628 − 1492 = 136 år'],
+      refs: [{ t: 'hist', n: 'Columbus når Amerika' }, { t: 'hist', n: 'Regalskeppet Vasa sjunker' }] },
+    { id: 'rom-livslangd', q: 'Hur många år gick det från att Rom grundades (enligt sägnen) till att Västromerska riket föll?', unit: 'år', answer: 1229,
+      steps: ['Rom grundades 753 f.Kr.', 'Västrom föll 476 e.Kr.', 'Före och efter Kristus läggs ihop: 753 + 476 = 1 229 år'],
+      refs: [{ t: 'hist', n: 'Rom grundas (enligt sägnen)' }, { t: 'hist', n: 'Västromerska riket faller' }] },
+    { id: 'magna-usa', q: 'Hur många år gick det mellan Magna Carta och USA:s självständighetsförklaring?', unit: 'år', answer: 561,
+      steps: ['Magna Carta: 1215', 'USA:s självständighetsförklaring: 1776', '1776 − 1215 = 561 år'],
+      refs: [{ t: 'hist', n: 'Magna Carta undertecknas' }, { t: 'hist', n: 'USA:s självständighetsförklaring' }] },
+    { id: 'kalmar-nu', q: 'Hur många år är det sedan Kalmarunionen bildades?', unit: 'år', answer: () => new Date().getFullYear() - 1397,
+      steps: ['Kalmarunionen bildades 1397', () => `${new Date().getFullYear()} − 1397 = ${new Date().getFullYear() - 1397} år`],
+      refs: [{ t: 'hist', n: 'Kalmarunionen bildas' }] },
+    { id: 'everest-energi', q: 'Hur mycket lägesenergi får en klättrare på 70 kg som går från havsnivå till toppen av Mount Everest?', unit: 'J', answer: 70 * 9.82 * 8849,
+      steps: ['Mount Everest är 8 849 m högt', 'Lägesenergi: W = m · g · h', '70 · 9,82 · 8 849 ≈ 6 080 000 J – ungefär 6 miljoner joule'],
+      refs: [{ t: 'geo', n: 'Mount Everest' }, { t: 'node', id: 'fy-en1' }] },
+    { id: 'vattenkokare-kwh', q: 'En vattenkokare kopplas till 230 V och drar 10 A. Hur många minuter tar det innan den har använt 1 kWh?', unit: 'minuter', answer: 3600000 / 2300 / 60,
+      steps: ['Effekt: P = U · I = 230 · 10 = 2 300 W', '1 kWh = 1 000 W i 3 600 s = 3 600 000 J', 'Tid: t = W / P = 3 600 000 / 2 300 ≈ 1 565 s ≈ 26 minuter'],
+      refs: [{ t: 'node', id: 'fy-el2' }, { t: 'node', id: 'fy-en3' }] },
+    { id: 'bil-energi', q: 'Hur stor rörelseenergi har en bil på 1 500 kg som kör i 25 m/s (90 km/h)?', unit: 'J', answer: 1500 * 25 * 25 / 2,
+      steps: ['Rörelseenergi: W = m · v² / 2', '25² = 625', '1 500 · 625 / 2 = 468 750 J – ungefär en halv miljon joule'],
+      refs: [{ t: 'node', id: 'fy-en2' }] },
+    { id: 'fart-dubbel', q: 'En bil kör i 100 km/h i stället för 50 km/h. Hur många gånger mer rörelseenergi har den?', unit: 'gånger', answer: 4,
+      steps: ['Rörelseenergi: W = m · v² / 2 – farten är i kvadrat', 'Dubbla farten: 2² = 4', 'Fyra gånger så mycket energi – därför blir krockar i hög fart så mycket värre'],
+      refs: [{ t: 'node', id: 'fy-en2' }] },
+    { id: 'tag-timme', q: 'Ett tåg kör i 30 m/s. Hur många kilometer kommer det på en timme?', unit: 'km', answer: 108,
+      steps: ['Sträcka: s = v · t', 'En timme = 3 600 s', '30 · 3 600 = 108 000 m = 108 km'],
+      refs: [{ t: 'node', id: 'fy-me2' }] },
+    { id: 'tryck-ett-ben', q: 'En person på 70 kg står på ett ben. Sulan har arean 0,01 m². Hur stort tryck blir det mot golvet?', unit: 'Pa', answer: 70 * 9.82 / 0.01,
+      steps: ['Tyngd: F = m · g = 70 · 9,82 ≈ 687 N', 'Tryck: p = F / A', '687 / 0,01 ≈ 68 700 Pa'],
+      refs: [{ t: 'node', id: 'fy-kr2' }, { t: 'node', id: 'fy-kr3' }] },
+    { id: 'pizza-area', q: 'Hur stor yta har en pizza med diametern 40 cm?', unit: 'cm²', answer: 3.14 * 20 * 20,
+      steps: ['Radien är halva diametern: 20 cm', 'Area: A = π · r²', '3,14 · 20² ≈ 1 256 cm²'],
+      refs: [{ t: 'node', id: 'ge3' }] },
+    { id: 'abonnemang-300', q: 'Ett mobilabonnemang kostar 99 kr plus 2 kr per minut. Vad kostar det en månad då du ringer 300 minuter?', unit: 'kr', answer: 699,
+      steps: ['Fast + rörlig kostnad: 99 + 2 · x', 'x = 300 minuter', '99 + 600 = 699 kr'],
+      refs: [{ t: 'node', id: 'al3' }] },
+  ],
+});
