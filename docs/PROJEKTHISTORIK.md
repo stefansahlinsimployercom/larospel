@@ -34,6 +34,7 @@ Se även [DESIGNPRINCIPER.md](../DESIGNPRINCIPER.md).
 20. **Kopplingar i historien (26 nov 2026):** 20 kopplingar orsak → verkan mellan händelser (5 tvärs över kategorierna). Nytt läge *🔗 Orsak & verkan* ("Vad ledde X till?" / "Vad låg bakom Y?"), en *🗺️ Tidslinjekarta* med alla händelser på en tidslinje och kopplingarna som bågar, samt ⓘ som visar kopplingar och vad som hände samtidigt i världen.
 21. **Bluffkollen (26 nov 2026):** nytt ämne med 18 påståenden (4 sanna). Tre steg: stämmer eller bluff → klicka var i meningen felet sitter → vilken sorts fel (fakta, tid, storleksordning, samband, enhet, vilseledande jämförelse). Facit visar kunskapen från spelets andra ämnen som avslöjar bluffen och markerar det spelaren redan kan; påståenden som bygger på sådant man kan kommer först.
 22. **Uppskattningar (26 nov 2026):** nytt ämne med 12 frågor som kombinerar kunskap från flera ämnen (t.ex. geografi + fysik). Poäng efter närhet (inom ×1,1 / ×1,5 / ×2 / ×10). Visuellt facit: logaritmisk skala med gissning mot svar, kunskapsbitarna (✅ = redan visat att man kan) som leder till svaret, och uträkningen steg för steg. Ledtråd visar vad man behöver veta (halverar poängen).
+23. **Smart repetition och inplaceringstest (26 nov 2026):** allt man kan kommer tillbaka efter 1, 3, 7, 30 och 90 dagar (gäller alla spel); ett rätt svar flyttar fram nästa repetition, ett fel gör att det ska läras in igen. "🔁 Dags att repetera" på startsidan, och repetitionerna kommer med automatiskt i "bara det jag inte kan". *🧭 Inplaceringstest* i matte- och fysikträden: två rätt i rad per steg markerar steget som klart, ett fel eller "Vet inte" visar var man ska börja.
 
 ## Viktiga beslut och lärdomar
 
@@ -75,8 +76,6 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - Fler språk/ord; röstuppläsning av ord.
 
 **Nästa att bygga (att göra-listan, 22 nov 2026)**
-- **Inplaceringstest:** snabbtest i början som låser upp det man redan kan (t.ex. hoppa direkt till rätt steg i matteträdet).
-- **Smart repetition (spaced repetition):** det man kan återkommer med växande mellanrum (1 dag, 3 dagar, 1 vecka, 1 månad) så länge man svarar rätt; en kort daglig repetitionsrunda.
 - **Anpassad tröskel:** snabbt och säkert rätt direkt kan räcka för "kan"; tvekan eller fel kräver fler.
 - **Mät svinnet:** visa tid till att kunna något, så att effekten syns.
 - **Kunskapskarta:** visuell överblick för varje ämne och en samlad karta på startsidan – hur stort området är, var man är, framsteg i färg, vad som kommer härnäst och var nya områden hänger fast.

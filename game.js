@@ -65,20 +65,56 @@ const Store = {
   load() {
     try {
       const d = this.KEY && JSON.parse(localStorage.getItem(this.KEY));
-      if (d && d.version === 1) { d.known ||= {}; return d; }
+      if (d && d.version === 1) { d.known ||= {}; this.ensureReview(d); return d; }
     } catch {}
-    return { version: 1, settings: {}, attempts: [], known: {} };
+    return { version: 1, settings: {}, attempts: [], known: {}, review: {} };
   },
-  known(pk) { return this.load().known[pk] || {}; },
-  // results: [{ key: 'farger/röd', ok: true }] → returnerar antal ord som just blev "kan"
+
+  // ---------- Smart repetition (glömskekurvan) ----------
+  // review: { pk: { key: { step, due } } }. Det man kan kommer tillbaka efter 1, 3, 7, 30 och 90 dagar.
+  // Ett rätt svar när det är dags flyttar fram nästa repetition; ett fel gör att det ska läras in igen.
+  REVIEW_DAYS: [1, 3, 7, 30, 90],
+  _shift: 0,                                   // för test: flytta "nu" framåt i tiden
+  now() { return Date.now() + this._shift; },
+  // Saker man kunde innan repetitionen fanns får en första repetition om en dag
+  ensureReview(d) {
+    if (d.review) return;
+    d.review = {};
+    const due = this.now() + 864e5 * this.REVIEW_DAYS[0];
+    Object.entries(d.known).forEach(([pk, m]) => Object.entries(m).forEach(([k, v]) => {
+      if (v >= KNOWN_AT) (d.review[pk] ||= {})[k] = { step: 0, due };
+    }));
+    this.save(d);
+  },
+  // Vad spelaren kan just nu: saker som är "dags att repetera" räknas tillfälligt som inte kunna
+  // (ett rätt svar räcker för att de ska räknas som kunna igen).
+  known(pk) {
+    const d = this.load(), m = { ...(d.known[pk] || {}) }, r = d.review[pk] || {}, t = this.now();
+    Object.entries(r).forEach(([k, s]) => { if (s.due <= t && (m[k] || 0) >= KNOWN_AT) m[k] = KNOWN_AT - 1; });
+    return m;
+  },
+  // Allt som är dags att repetera: [{ pk, key }]
+  dueList() {
+    const d = this.load(), t = this.now(), out = [];
+    Object.entries(d.review).forEach(([pk, r]) => Object.entries(r).forEach(([k, s]) => {
+      if (s.due <= t && ((d.known[pk] || {})[k] || 0) >= KNOWN_AT) out.push({ pk, key: k });
+    }));
+    return out;
+  },
+  // results: [{ key: 'farger/röd', ok: true }] → returnerar antal saker som just blev "kan"
   updateWords(pk, results) {
     const d = this.load();
     const m = d.known[pk] ||= {};
+    const rv = d.review[pk] ||= {};
+    const t = this.now(), DAY = 864e5, last = this.REVIEW_DAYS.length - 1;
     let fresh = 0;
     results.forEach(({ key, ok }) => {
       const before = m[key] || 0;
+      const wasDue = rv[key] && rv[key].due <= t;
       m[key] = ok ? before + 1 : 0;
-      if (before < KNOWN_AT && m[key] >= KNOWN_AT) fresh++;
+      if (!ok) delete rv[key];
+      else if (before < KNOWN_AT && m[key] >= KNOWN_AT) { fresh++; rv[key] = { step: 0, due: t + DAY * this.REVIEW_DAYS[0] }; }
+      else if (wasDue) { const s = Math.min(rv[key].step + 1, last); rv[key] = { step: s, due: t + DAY * this.REVIEW_DAYS[s] }; }
     });
     this.save(d);
     return fresh;
@@ -129,7 +165,19 @@ function card(html, onClick) {
 function showHome() {
   stopTimer();
   if (!Profiles.active()) return showProfiles();
-  app.innerHTML = `<h2>Välj ämne</h2><div class="tracks"></div>`;
+  app.innerHTML = `<div id="review"></div><h2>Välj ämne</h2><div class="tracks"></div>`;
+  // Smart repetition: vad är det dags att repetera, per ämne?
+  const due = Store.dueList();
+  if (due.length) {
+    const per = new Map();
+    due.forEach(({ pk }) => { const t = TRACKS.find(x => pk === x.id || pk.startsWith(x.id + '/')); if (t) per.set(t, (per.get(t) || 0) + 1); });
+    const box = app.querySelector('#review');
+    box.innerHTML = `<div class="reviewbox"><strong>🔁 Dags att repetera: ${due.length} ${due.length === 1 ? 'sak' : 'saker'}</strong>
+      <span class="small">Det här kunde du – och nu är det precis rätt tid att fräscha upp det innan det glöms. Med "bara det jag inte kan" kommer de med automatiskt.</span>
+      <div class="rvlist">${[...per].map(([t, n], k) => `<button class="rvbtn" data-k="${k}">${t.icon} ${esc(t.name)} <strong>${n}</strong></button>`).join('')}</div></div>`;
+    const list = [...per.keys()];
+    box.querySelectorAll('.rvbtn').forEach(b => b.onclick = () => showTrack(list[+b.dataset.k]));
+  }
   const box = app.querySelector('.tracks');
   TRACKS.forEach(t => {
     const n = (t.categories || t.branches || t.sets || t.recipes || t.cases || t.chains || t.builds || t.claims || t.questions || t.quizzes || []).length;

@@ -31,7 +31,7 @@ python server.py
 | 🕵️ **Bluffkollen** | Avslöja felaktiga påståenden: stämmer eller bluff, var sitter felet, vilken sorts fel – med kunskap från de andra ämnena |
 | 🎯 **Uppskattningar** | Uppskatta svar som kombinerar kunskap från flera ämnen – poäng efter närhet och ett facit som visar vilka kunskaper som leder dit |
 
-Gemensamt för alla: progress sparas i webbläsaren (ett ord/en plats/ett steg räknas som "kan" efter två rätt i rad), "träna bara det jag inte kan", ⓘ-inforutor med fördjupning, ledtrådar och facit, samt en resultatsida.
+Gemensamt för alla: progress sparas i webbläsaren (ett ord/en plats/ett steg räknas som "kan" efter två rätt i rad), smart repetition (det man kan kommer tillbaka efter 1, 3, 7, 30 och 90 dagar), "träna bara det jag inte kan", ⓘ-inforutor med fördjupning, ledtrådar och facit, samt en resultatsida.
 
 ## Spelare och progress
 
@@ -46,7 +46,7 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 
 - `index.html`, `style.css` – sidan och utseendet
 - `game.js` – gemensam motor (lagring, startsida, resultat, ordquiz, inforutor)
-- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `profiles.js` – en fil per speltyp
+- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `placement.js`, `profiles.js` – en fil per speltyp
 - `quizzes/*.js` – innehållet (ord, händelser, uppgiftsgeneratorer, recept, fall …). Nytt innehåll läggs till här utan att röra motorerna.
 - `server.py` – liten lokal webbserver utan cache
 

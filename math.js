@@ -206,9 +206,11 @@ function showMathTree(track) {
       <div class="modes">${modes.map(([k, n]) => `<button data-mode="${k}">${n}</button>`).join('')}</div>
     </div>
     <p class="legend" id="modehelp"></p>
+    <p><button class="btn secondary" id="placebtn">🧭 Inplaceringstest – hoppa över det du redan kan</button></p>
     <div class="tree"></div>`;
   app.querySelector('.back').onclick = showHome;
   app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { mode = b.dataset.mode; Store.setSetting(modeKey, mode); render(); });
+  app.querySelector('#placebtn').onclick = () => playPlacement(track, () => showMathTree(track));
 
   function render() {
     app.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
