@@ -165,7 +165,13 @@ function card(html, onClick) {
 function showHome() {
   stopTimer();
   if (!Profiles.active()) return showProfiles();
-  app.innerHTML = `<div id="review"></div><h2>Välj ämne</h2><div class="tracks"></div>`;
+  app.innerHTML = `<div id="review"></div><div id="kmslot"></div><h2>Välj ämne</h2><div class="tracks"></div>`;
+  // Kunskapskartan (knowledgemap.js): överblick över allt
+  if (typeof kmEntryHtml === 'function') {
+    const slot = app.querySelector('#kmslot');
+    slot.innerHTML = kmEntryHtml();
+    slot.querySelector('#kmentry').onclick = showKnowledgeMap;
+  }
   // Smart repetition: vad är det dags att repetera, per ämne?
   const due = Store.dueList();
   if (due.length) {
