@@ -80,7 +80,7 @@ function showKnowledgeMap() {
       <div><strong>Du kan ${tot.known} av ${tot.total} saker</strong> i ${inv.length} ämnen.${tot.due ? `<br>🔁 ${tot.due} är dags att repetera.` : ''}
         <div class="kmlegend"><span><i class="sq known"></i>kan</span><span><i class="sq half"></i>på gång</span><span><i class="sq due"></i>dags att repetera</span><span><i class="sq none"></i>inte än</span><span><i class="sq soon"></i>kommer snart</span></div>
         <span class="small">En ruta = en sak. Ju fler rutor, desto större område. Håll muspekaren över en ruta för att se vad den är – klicka på ett ämne för att öva.</span>
-        ${typeof showCrossMap === 'function' ? '<p><button class="btn secondary" id="kmcross">🌐 Kopplingar mellan ämnen</button></p>' : ''}</div>
+        <p>${typeof competenceEntryHtml === 'function' ? competenceEntryHtml() : ''} ${typeof showCrossMap === 'function' ? '<button class="btn secondary" id="kmcross">🌐 Kopplingar mellan ämnen</button>' : ''}</p></div>
     </div>
     <div class="kmgrid">${inv.map((x, k) => {
       const pct = Math.round(100 * (x.known + x.due) / x.total);
@@ -94,6 +94,7 @@ function showKnowledgeMap() {
     }).join('')}</div>`;
   app.querySelector('.back').onclick = showHome;
   app.querySelector('#kmcross')?.addEventListener('click', () => showCrossMap());
+  app.querySelector('#kmcomp')?.addEventListener('click', () => showCompetence());
   app.querySelectorAll('.kmsubj').forEach(el => el.addEventListener('click', e => {
     if (e.target.closest('.sq')) return;
     showTrack(inv[+el.dataset.k].track);

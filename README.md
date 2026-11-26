@@ -37,6 +37,8 @@ Gemensamt för alla: progress sparas i webbläsaren (ett ord/en plats/ett steg r
 
 🗺️ *Min kunskapskarta* på startsidan visar allt i spelet på en gång – en ruta per sak, färgad efter om du kan den, håller på att lära dig den eller borde repetera den.
 
+Från kartan når du också **🌐 Kopplingar mellan ämnen** och **🧩 Vad kan jag lösa?** – vilka verkliga problemtyper du kan lösa med det du kan, och vad som är nästa bästa sak att lära sig.
+
 ## Spelare och progress
 
 Knappen med din emoji i sidhuvudet byter spelare. Varje spelare har sin egen progress i webbläsaren. Under 📊 Resultat kan du **spara ner** din progress som en fil och **ladda upp** den på en annan dator – som ny spelare eller sammanslagen med en befintlig.
@@ -50,7 +52,7 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 
 - `index.html`, `style.css` – sidan och utseendet
 - `game.js` – gemensam motor (lagring, startsida, resultat, ordquiz, inforutor)
-- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `placement.js`, `knowledgemap.js`, `crosslinks.js`, `profiles.js` – en fil per speltyp
+- `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `placement.js`, `knowledgemap.js`, `crosslinks.js`, `competence.js`, `profiles.js` – en fil per speltyp
 - `quizzes/*.js` – innehållet (ord, händelser, uppgiftsgeneratorer, recept, fall …). Nytt innehåll läggs till här utan att röra motorerna.
 - `server.py` – liten lokal webbserver utan cache
 
