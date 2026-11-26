@@ -12,6 +12,7 @@
   const coin = () => Math.random() < 0.5;
   const neg = n => (n < 0 ? `(−${-n})` : String(n));
   const sq = x => x * x;
+  const shuffle2 = a => a.map(v => [Math.random(), v]).sort((p, q) => p[0] - q[0]).map(p => p[1]);
 
   // Formler för geometri. tpl = uträkningen med {0}, {1} … där måtten dras in.
   // what = vad formeln räknar ut (visas när man väljer fel formel).
@@ -64,6 +65,51 @@
               const a = r(-10, 10), b = r(-10, 10);
               const s = a < 0 ? `−${-a}` : String(a);
               return coin() ? { text: `${s} + ${neg(b)}`, answer: a + b } : { text: `${s} − ${neg(b)}`, answer: a - b };
+            },
+          },
+          {
+            id: 'ar-div', name: 'Division', req: ['ar-tabell'],
+            desc: 'Dela ett tal jämnt – multiplikationstabellen baklänges.',
+            gen: () => { const b = r(2, 10), q = r(2, 12); return { text: `${b * q} / ${b}`, answer: q }; },
+          },
+          {
+            id: 'ar-ordning', name: 'Räkneordning', req: ['ar-tabell'],
+            desc: 'Parenteser först, sedan gånger och delat, sist plus och minus.',
+            gen: () => {
+              const a = r(2, 9), b = r(2, 9), c = r(2, 9), k = r(0, 3);
+              if (k === 0) return { text: `${a} + ${b} · ${c}`, answer: a + b * c };
+              if (k === 1) return { text: `(${a} + ${b}) · ${c}`, answer: (a + b) * c };
+              if (k === 2) { const big = b * c + a; return { text: `${big} − ${b} · ${c}`, answer: a }; }
+              return { text: `${a} · ${b} − ${c}`, answer: a * b - c };
+            },
+          },
+          {
+            id: 'ar-pot', name: 'Potenser', req: ['ar-ordning'],
+            desc: 'En potens är upprepad multiplikation: 2³ = 2 · 2 · 2.',
+            gen: () => {
+              const SUP = ['', '', '²', '³', '⁴', '⁵', '⁶'], k = r(0, 2);
+              if (k === 0) { const a = r(2, 12); return { text: `${a}²`, answer: a * a }; }
+              if (k === 1) { const a = r(2, 5), e = a === 2 ? r(3, 6) : 3; return { text: `${a}${SUP[e]}`, answer: a ** e }; }
+              const e = r(2, 6); return { text: `10${SUP[e]}`, answer: 10 ** e };
+            },
+          },
+          {
+            id: 'ar-brak', name: 'Bråk av ett tal', req: ['ar-div'],
+            desc: 'Tre fjärdedelar av 20: dela med nämnaren, gånger täljaren.',
+            gen: () => {
+              const [t, n] = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 10], [3, 10], [7, 10]][r(0, 11)];
+              const x = n * r(2, 12);
+              return { text: `${t}/${n} av ${x}`, answer: x / n * t };
+            },
+          },
+          {
+            id: 'ar-proc', name: 'Procent', req: ['ar-brak'],
+            desc: 'Procent betyder hundradelar: 25 % av 80 = 0,25 · 80.',
+            gen: () => {
+              const p = [1, 5, 10, 20, 25, 50, 75, 30, 40, 15][r(0, 9)];
+              const step = p % 25 === 0 ? 4 : p % 5 === 0 ? 20 : 100;
+              const x = step * r(1, p === 1 ? 9 : 15);
+              return { text: `${p} % av ${x}`, answer: x * p / 100 };
             },
           },
         ],
@@ -203,12 +249,99 @@
         ],
       },
       {
+        id: 'statistik', name: 'Statistik', icon: '📊',
+        nodes: [
+          {
+            id: 'st1', name: 'Medelvärde', req: ['ar-div'],
+            desc: 'Lägg ihop alla värden och dela med hur många de är.',
+            gen: () => {
+              const n = r(3, 6), mean = r(5, 20);
+              const v = Array.from({ length: n - 1 }, () => mean + r(-4, 4));
+              const last = mean * n - v.reduce((s, x) => s + x, 0);
+              return { text: `${shuffle2([...v, last]).join(', ')} – medelvärde?`, answer: mean };
+            },
+          },
+          {
+            id: 'st2', name: 'Median', req: ['st1'],
+            desc: 'Sortera värdena – medianen är värdet i mitten.',
+            gen: () => {
+              const n = coin() ? 5 : 7, v = Array.from({ length: n }, () => r(1, 40));
+              const s = [...v].sort((a, b) => a - b);
+              return { text: `${v.join(', ')} – median?`, answer: s[(n - 1) / 2] };
+            },
+          },
+          {
+            id: 'st3', name: 'Variationsbredd', req: ['st2'],
+            desc: 'Hur utspridda är värdena? Största minus minsta.',
+            gen: () => { const v = Array.from({ length: r(5, 7) }, () => r(-5, 35)); return { text: `${v.map(x => (x < 0 ? '−' + -x : x)).join(', ')} – variationsbredd?`, answer: Math.max(...v) - Math.min(...v) }; },
+          },
+        ],
+      },
+      {
         id: 'sannolikhet', name: 'Sannolikhet', icon: '🎲',
-        nodes: [{ id: 'sa1', name: 'Gynnsamma / möjliga', req: ['ar-tabell'], soon: true }],
+        nodes: [
+          {
+            id: 'sa1', name: 'Gynnsamma / möjliga', req: ['ar-proc'],
+            desc: 'Sannolikhet = gynnsamma utfall / möjliga utfall. Svara i procent, avrunda till heltal.',
+            gen: () => {
+              const k = r(0, 2);
+              if (k === 0) { const g = r(1, 5); return { text: `Tärning: P(${g === 1 ? 'en etta' : `högst ${g}`}) i %`, answer: Math.round(100 * g / 6), tol: 1 }; }
+              if (k === 1) { const red = r(1, 9), blue = r(1, 9); return { text: `${red} röda och ${blue} blå kulor: P(röd) i %`, answer: Math.round(100 * red / (red + blue)), tol: 1 }; }
+              return { text: 'Kortlek med 52 kort: P(hjärter) i %', answer: 25 };
+            },
+          },
+          {
+            id: 'sa2', name: 'Både och', req: ['sa1'],
+            desc: 'Två oberoende händelser: multiplicera sannolikheterna. Svara i procent, avrunda till heltal.',
+            gen: () => {
+              const k = r(0, 2);
+              if (k === 0) { const n = r(2, 4); return { text: `Krona ${n} gånger i rad: P i %`, answer: Math.round(100 / 2 ** n), tol: 1 }; }
+              if (k === 1) return { text: 'Två tärningar: P(två sexor) i %', answer: 3, tol: 1 };
+              return { text: 'Tärning och mynt: P(sexa och krona) i %', answer: 8, tol: 1 };
+            },
+          },
+          {
+            id: 'sa3', name: 'Förväntat antal', req: ['sa1'],
+            desc: 'Hur många gånger kan man vänta sig något? Sannolikheten gånger antal försök.',
+            gen: () => {
+              if (coin()) { const n = 6 * r(2, 20); return { text: `Tärning ${n} gånger: väntat antal sexor?`, answer: n / 6 }; }
+              const n = 2 * r(5, 50); return { text: `Mynt ${n} gånger: väntat antal krona?`, answer: n / 2 };
+            },
+          },
+        ],
       },
       {
         id: 'analys', name: 'Analys', icon: '📈',
-        nodes: [{ id: 'an1', name: 'Derivata', req: ['al5'], soon: true }],
+        nodes: [
+          {
+            id: 'an0', name: 'Lutning', req: ['al3'],
+            desc: 'En rät linjes lutning: k = Δy / Δx – hur mycket y ändras när x ökar med 1.',
+            gen: () => {
+              const k = r(-5, 5) || 2, x1 = r(-5, 5), dx = r(1, 4), y1 = r(-9, 9);
+              const p = (x, y) => `(${x < 0 ? '−' + -x : x}, ${y < 0 ? '−' + -y : y})`;
+              return { text: `Linjen genom ${p(x1, y1)} och ${p(x1 + dx, y1 + k * dx)}: k?`, answer: k };
+            },
+          },
+          {
+            id: 'an1', name: 'Derivata', req: ['an0', 'ar-pot'],
+            desc: 'Derivatan är lutningen i en punkt. Regel: xⁿ blir n · xⁿ⁻¹ (x² blir 2x, x blir 1).',
+            gen: () => {
+              const a = r(1, 5), b = r(-6, 6), x0 = r(-3, 4);
+              const t = `${a === 1 ? '' : a}x²${b ? (b < 0 ? ' − ' + -b : ' + ' + b) + 'x' : ''}`;
+              return { text: `f(x) = ${t}. f′(${x0 < 0 ? '−' + -x0 : x0}) = ?`, answer: 2 * a * x0 + b };
+            },
+          },
+          {
+            id: 'an2', name: 'Största och minsta', req: ['an1'],
+            desc: 'Där derivatan är noll vänder kurvan. Lös f′(x) = 0 för att hitta x.',
+            gen: () => {
+              const a = r(1, 4) * (coin() ? 1 : -1), x0 = r(-5, 5), c = r(-9, 9);
+              const b = -2 * a * x0;   // f(x) = ax² + bx + c har sin vändpunkt i x0
+              const t = `${a === 1 ? '' : a === -1 ? '−' : a < 0 ? '−' + -a : a}x²${b ? (b < 0 ? ' − ' + -b : ' + ' + b) + 'x' : ''}${c ? (c < 0 ? ' − ' + -c : ' + ' + c) : ''}`;
+              return { text: `f(x) = ${t}. Vid vilket x har f sitt ${a > 0 ? 'minsta' : 'största'} värde?`, answer: x0 };
+            },
+          },
+        ],
       },
     ],
   });
@@ -382,6 +515,34 @@
       example: 'Är en pizza på 40 cm mer än dubbelt så stor som en på 28 cm? (Ja: ca 1 256 cm² mot 615 cm²)' },
     ge4: { title: 'Diagonaler med Pythagoras', problems: ['Får TV:n plats? (skärmar mäts diagonalt)', 'Hur lång stege behövs?', 'Kortaste vägen tvärs över ett fält'],
       example: 'En stege står 1,5 m från väggen och når 2 m upp. Hur lång är stegen? (√(1,5² + 2²) = 2,5 m)' },
+    'ar-div': { title: 'Dela upp och fördela', problems: ['Hur mycket blir det per person?', 'Hur många paket behövs?', 'Hur många veckor räcker pengarna?'],
+      example: '84 kr delas lika av 7 kompisar. (84 / 7 = 12 kr var)' },
+    'ar-ordning': { title: 'Räkna rätt i flera steg', problems: ['Kvitton med flera sorters varor', 'Miniräknare och kalkylark följer räkneordningen', 'Formler i jobbet och skolan'],
+      example: '3 bullar à 15 kr plus en kaffe för 25 kr: 3 · 15 + 25 = 70 kr' },
+    'ar-pot': { title: 'Stora tal och tillväxt', problems: ['Hur snabbt växer något som fördubblas?', 'Stora tal i nyheterna: tusen, miljon, miljard', 'Kvadratmeter och kubikmeter'],
+      example: 'Ett rykte som fördubblas varje dag når 2¹⁰ = 1 024 personer på tio dagar.' },
+    'ar-brak': { title: 'Delar av en helhet', problems: ['Halva receptet, en tredjedel av pizzan', 'Hur stor del av lönen går till hyran?', 'Skala på ritningar och kartor'],
+      example: 'Du dubblar inte – du gör 3/4 av ett recept med 8 dl mjölk: 8 / 4 · 3 = 6 dl.' },
+    'ar-proc': { title: 'Rabatter, moms och ränta', problems: ['Vad kostar tröjan på 30 % rea?', 'Hur mycket är momsen?', 'Hur mycket ränta blir det på ett år?'],
+      example: 'En jacka för 800 kr har 25 % rabatt: 25 % av 800 = 200 kr – du betalar 600 kr.' },
+    st1: { title: 'Typiskt värde', problems: ['Medeltemperatur, medelbetyg, snittpris', 'Hur mycket handlar vi för i snitt per vecka?'],
+      example: 'Matkostnad fyra veckor: 900, 1 100, 1 000 och 1 200 kr. Snitt: 4 200 / 4 = 1 050 kr.' },
+    st2: { title: 'Mitten utan att luras av extremer', problems: ['Medianlön och bostadspriser – därför använder nyheterna ofta median', 'Vad är en vanlig restid?'],
+      example: 'Löner 25, 27, 28, 30 och 150 tusen: medelvärdet är 52 tusen, men medianen 28 tusen säger mer om de flesta.' },
+    st3: { title: 'Hur utspridd?', problems: ['Hur mycket varierar temperaturen under dygnet?', 'Är resultaten jämna eller spretiga?'],
+      example: 'Dygnets temperaturer från −3 till 8 °C: variationsbredd 8 − (−3) = 11 grader.' },
+    sa1: { title: 'Chanser och risker', problems: ['Hur stor är chansen att vinna?', 'Är spelet rättvist?', 'Risker i vardagen – i procent'],
+      example: 'Ett lotteri har 500 lotter och 20 vinster: 20 / 500 = 4 % chans per lott.' },
+    sa2: { title: 'Flera saker samtidigt', problems: ['Chansen att allt går som planerat', 'Hur säker är en kod med flera siffror?', 'Varför "nu måste det bli krona" är fel tänkt'],
+      example: 'Två tåg som vart och ett är i tid 90 % av gångerna: båda i tid 0,9 · 0,9 = 81 %.' },
+    sa3: { title: 'Vad kan man vänta sig?', problems: ['Hur många svarar på ett utskick?', 'Hur många sexor blir det på 60 kast?', 'Lönar sig ett spel i längden?'],
+      example: '5 % av 400 mottagare brukar svara: väntat antal = 0,05 · 400 = 20 svar.' },
+    an0: { title: 'Förändring per steg', problems: ['Hur mycket ökar kostnaden per kilometer?', 'Hastighet: meter per sekund', 'Trender i diagram'],
+      example: 'Taxi: 120 kr efter 5 km, 200 kr efter 15 km → k = 80 / 10 = 8 kr per km.' },
+    an1: { title: 'Förändring just nu', problems: ['Hastigheten i ett visst ögonblick (inte medel)', 'Hur snabbt sprids något just nu?', 'Vad kostar en enhet till? (marginalkostnad)'],
+      example: 'Sträckan s(t) = 5t² meter: hastigheten vid t = 2 s är s′(2) = 10 · 2 = 20 m/s.' },
+    an2: { title: 'Optimering – bästa möjliga', problems: ['Vilket pris ger störst intäkt?', 'Största yta med ett visst staket', 'Lägsta kostnad'],
+      example: '40 m staket runt en rektangel: arean A(x) = x(20 − x) är störst när A′(x) = 20 − 2x = 0 → x = 10 m, alltså en kvadrat.' },
     ge5: { title: 'Pythagoras baklänges', problems: ['Hur högt når en stege av en viss längd?', 'Hur bred är en skärm med en viss diagonal och höjd?'],
       example: 'En 5 m lång stege står 3 m från väggen. Hur högt upp når den? (√(5² − 3²) = 4 m)' },
   };
