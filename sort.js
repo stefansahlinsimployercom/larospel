@@ -50,12 +50,14 @@ function showSortTrack(track) {
   onlySel.onchange = () => Store.setSetting('onlyUnknown', onlySel.checked);
   const box = app.querySelector('.quizzes');
   track.sets.forEach(set => {
+    if (contribSkip(set)) return;
     const p = sortProgress(track, set);
     const status = p.known === p.total ? '✅ Du kan alla' : `${p.known}/${p.total} kan du`;
-    box.appendChild(card(`<strong>${set.icon} ${set.name}</strong><small>${set.baskets.length} korgar · ${status}</small>
+    box.appendChild(card(`<strong>${set.icon} ${set.name}</strong><small>${set.baskets.length} korgar · ${status}</small>${byTag(set)}
       <div class="progress"><div style="width:${Math.round(100 * p.known / p.total)}%"></div></div>`,
       () => playSort(track, set, onlySel.checked, () => showSortTrack(track))));
   });
+  contribAddCard(track, box, () => showSortTrack(track));
 }
 
 // ---------- Spelet ----------

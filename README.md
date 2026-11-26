@@ -39,6 +39,10 @@ Gemensamt för alla: progress sparas i webbläsaren (ett ord/en plats/ett steg r
 
 Från kartan når du också **🌐 Kopplingar mellan ämnen** och **🧩 Vad kan jag lösa?** – vilka verkliga problemtyper du kan lösa med det du kan, och vad som är nästa bästa sak att lära sig.
 
+## Bidrag från spelare
+
+Alla kan fylla på spelet med egna **ordlistor**, **historiekategorier**, **sorteringar** och **recept** – via ➕-kortet i ämnet eller ✍️ *Bidrag från spelare* på startsidan. Bidragen fungerar precis som det inbyggda innehållet och märks med ✍️ och vem som lagt till dem. Du kan visa allt, bara Lärospels innehåll eller bara bidrag, och dölja enskilda personer. Bidragen sparas i webbläsaren och delas med andra som fil.
+
 ## Genererade och AI-skapade frågor
 
 Bluffkollen och Uppskattningar blandar handskrivna frågor med **⚙️ genererade** (byggs varje runda ur spelets egen kunskap, så svaret är alltid rätt) och **🤖 AI-skapade** (skrivna i omgångar, t.ex. `quizzes/ai-omgang-1.js`). Hittar du ett fel – tryck **🚩 Något fel i frågan?**. Frågan visas inte igen och listas under 📊 Resultat.
@@ -63,6 +67,7 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 - `index.html`, `style.css` – sidan och utseendet
 - `game.js` – gemensam motor (lagring, startsida, resultat, ordquiz, inforutor)
 - `history.js`, `math.js`, `phys.js`, `sort.js`, `geo.js`, `recipe.js`, `diag.js`, `chain.js`, `build.js`, `lang.js`, `admin.js`, `bluff.js`, `estimate.js`, `placement.js`, `knowledgemap.js`, `crosslinks.js`, `competence.js`, `profiles.js` – en fil per speltyp
+- `contrib.js` – bidrag från spelare (formulär, märkning, filter, dela som fil)
 - `generators.js` – skapar nya frågor ur spelets kunskap
 - `tools/validera.js` – kontrollerar innehållet
 - `quizzes/*.js` – innehållet (ord, händelser, uppgiftsgeneratorer, recept, fall …). Nytt innehåll läggs till här utan att röra motorerna.

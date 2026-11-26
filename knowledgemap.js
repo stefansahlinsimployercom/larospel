@@ -25,7 +25,7 @@ function knowledgeInventory() {
     } else if (t.languages) {
       const { from, to } = getPair(t);
       note = `${t.languages[from]} → ${t.languages[to]}`;
-      areas = t.categories.map(c => ({ name: c.name, icon: c.icon, items: c.words.map(w => ({ label: `${alts(w[from])[0]} → ${alts(w[to])[0]}`, state: kmState(`${t.id}/${from}-${to}`, wordKey(t, c, w)) })) }));
+      areas = t.categories.filter(c => c.words.every(w => w[from] && w[to])).map(c => ({ name: c.name, icon: c.icon, items: c.words.map(w => ({ label: `${alts(w[from])[0]} → ${alts(w[to])[0]}`, state: kmState(`${t.id}/${from}-${to}`, wordKey(t, c, w)) })) }));
     } else if (t.type === 'map') {
       const lvl = Store.getSetting(t.id + '-level') || 'allm';
       note = GEO_LEVELS[lvl].name;

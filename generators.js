@@ -6,7 +6,7 @@
   const T = id => (window.TRACKS || []).find(t => t.id === id);
   const yr = y => (y < 0 ? `${-y} f.Kr.` : String(y));
   const pick = a => a[Math.floor(Math.random() * a.length)];
-  const events = () => { const h = T('historia'); return h ? h.categories.flatMap(c => c.events.map(ev => ({ ev, cat: c }))) : []; };
+  const events = () => { const h = T('historia'); return h ? (h._base || h.categories).flatMap(c => c.events.map(ev => ({ ev, cat: c }))) : []; };
 
   // ---------- Bluffkollen ----------
   // Tidsordning: "X skedde före Y" (sant eller falskt utifrån årtalen)

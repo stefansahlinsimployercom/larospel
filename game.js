@@ -181,12 +181,19 @@ function card(html, onClick) {
 function showHome() {
   stopTimer();
   if (!Profiles.active()) return showProfiles();
-  app.innerHTML = `<div id="review"></div><div id="kmslot"></div><h2>Välj ämne</h2><div class="tracks"></div>`;
+  if (typeof applyContrib === 'function') applyContrib();
+  app.innerHTML = `<div id="review"></div><div id="kmslot"></div><div id="contribslot"></div><h2>Välj ämne</h2><div class="tracks"></div>`;
   // Kunskapskartan (knowledgemap.js): överblick över allt
   if (typeof kmEntryHtml === 'function') {
     const slot = app.querySelector('#kmslot');
     slot.innerHTML = kmEntryHtml();
     slot.querySelector('#kmentry').onclick = showKnowledgeMap;
+  }
+  // Bidrag från spelare (contrib.js)
+  if (typeof contribEntryHtml === 'function') {
+    const cs = app.querySelector('#contribslot');
+    cs.innerHTML = contribEntryHtml();
+    cs.querySelector('#contribopen').onclick = showContrib;
   }
   // Smart repetition: vad är det dags att repetera, per ämne?
   const due = Store.dueList();
@@ -202,6 +209,7 @@ function showHome() {
   }
   const box = app.querySelector('.tracks');
   TRACKS.forEach(t => {
+    if (typeof contribHideTrack === 'function' && contribHideTrack(t)) return;
     const n = (t.categories || t.branches || t.sets || t.recipes || t.cases || t.chains || t.builds || t.claims || t.questions || t.quizzes || []).length;
     const sub = n ? `${n} ${t.categories ? 'kategorier' : t.branches ? 'grenar' : t.sets ? 'sorteringsspel' : t.recipes ? 'recept' : t.cases ? 'fall' : t.chains ? (n === 1 ? 'kedja' : 'kedjor') : t.builds ? 'konstruktioner' : t.claims ? 'påståenden' : t.questions ? 'frågor' : 'quiz'}` : 'Kommer snart';
     box.appendChild(card(`<strong>${t.icon} ${t.name}</strong><small>${sub}</small>`, n ? () => showTrack(t) : null));
@@ -315,11 +323,17 @@ function showVocabTrack(track) {
     const box = app.querySelector('.quizzes');
     box.innerHTML = '';
     track.categories.forEach(cat => {
+      if (contribSkip(cat)) return;
+      if (!cat.words.every(w => w[from] && w[to])) {   // egen ordlista som inte finns på de valda språken
+        const has = Object.keys(L).filter(c => cat.words.every(w => w[c])).map(c => L[c]).join(', ');
+        const c = card(`<strong>${cat.icon} ${cat.name}</strong><small>Finns bara på ${has}</small>${byTag(cat)}`, null);
+        c.classList.add('dim'); box.appendChild(c); return;
+      }
       const p = catProgress(track, cat, from, to);
       const pct = Math.round(100 * p.known / p.total);
       const status = p.known === p.total ? '✅ Du kan alla' : `${p.known}/${p.total} ord kan du`;
       box.appendChild(card(
-        `<strong>${cat.icon} ${cat.name}</strong><small>${status}</small>
+        `<strong>${cat.icon} ${cat.name}</strong><small>${status}</small>${byTag(cat)}
          <div class="progress"><div style="width:${pct}%"></div></div>`,
         () => startVocab(buildVocabQuiz(track, cat, from, to, onlySel.checked), () => showTrack(track), () => {
           [from, to] = [to, from];
@@ -327,6 +341,7 @@ function showVocabTrack(track) {
           return buildVocabQuiz(track, cat, from, to, onlySel.checked);
         })));
     });
+    contribAddCard(track, box, () => showTrack(track));
   }
   renderCats();
 }
@@ -509,7 +524,7 @@ function vocabStatsHtml() {
       const [from, to] = pk.slice(track.id.length + 1).split('-');
       const m = knownAll[pk];
       let sum = 0, tot = 0;
-      const rows = track.categories.map(cat => {
+      const rows = track.categories.filter(cat => cat.words.every(w => w[from] && w[to])).map(cat => {
         const chips = cat.words.map(w => {
           const s = m[wordKey(track, cat, w)] || 0;
           const cls = s >= KNOWN_AT ? 'known' : s > 0 ? 'half' : '';

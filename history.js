@@ -76,14 +76,16 @@ function showEventsTrack(track) {
     box.appendChild(card(`<strong>🗺️ Tidslinjekarta</strong><small>Alla händelser på en tidslinje – med kopplingarna mellan dem</small>`, () => showTimelineMap(track, back)));
     if (mode === 'koppling') return;
     track.categories.forEach(cat => {
+      if (contribSkip(cat)) return;
       const p = evProgress(track, cat, mode);
       const pct = Math.round(100 * p.known / p.total);
       const status = p.known === p.total ? '✅ Du kan alla' : `${p.known}/${p.total} händelser kan du`;
       box.insertBefore(card(
-        `<strong>${cat.icon} ${cat.name}</strong><small>${status}</small>
+        `<strong>${cat.icon} ${cat.name}</strong><small>${status}</small>${byTag(cat)}
          <div class="progress"><div style="width:${pct}%"></div></div>`,
         () => (mode === 'fritext' ? playYears : playTimeline)(track, cat, onlySel.checked, back)), box.lastElementChild);
     });
+    contribAddCard(track, box, back);
   }
   render();
 }

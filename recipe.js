@@ -37,12 +37,14 @@ function showRecipeTrack(track) {
       const m = Store.known(recipePk(track));
       const best = Store.getSetting(track.id + '-stars') || {};
       track.recipes.forEach(r => {
+        if (contribSkip(r)) return;
         const s = m[r.id] || 0;
         const stars = best[r.id] != null ? '⭐'.repeat(best[r.id]) + '☆'.repeat(4 - best[r.id]) : '☆☆☆☆';
         const status = s >= KNOWN_AT ? '✅ Du kan receptet' : s > 0 ? `${s}/${KNOWN_AT} felfria i rad` : 'Inte provat felfritt än';
-        box.appendChild(card(`<strong>${r.icon} ${r.name}</strong><small>${esc(r.desc)}</small><small>Bästa: ${stars} · ${status}</small>`,
+        box.appendChild(card(`<strong>${r.icon} ${r.name}</strong><small>${esc(r.desc)}</small><small>Bästa: ${stars} · ${status}</small>${byTag(r)}`,
           () => playRecipe(track, r, back)));
       });
+      contribAddCard(track, box, back);
     } else {
       app.querySelector('#modehelp').textContent = `Något blev fel – vad var orsaken? Ställ diagnosen och lär dig hur du undviker felet. Rätt ${KNOWN_AT} gånger i rad så kan du felet.`;
       const withFaults = track.recipes.filter(r => r.faults && r.faults.length);
