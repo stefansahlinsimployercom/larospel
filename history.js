@@ -3,7 +3,7 @@
 //   - tidslinje: dra händelserna i rätt ordning
 // Använder Store, card, fmt, esc, stopTimer och timerId från game.js.
 
-const EV_MODES = { fritext: '✍️ Årtal (fritext)', tidslinje: '↕️ Tidslinje' };
+const EV_MODES = { fritext: '✍️ Årtal (fritext)', tidslinje: '↕️ Tidslinje', koppling: '🔗 Orsak & verkan' };
 const evKey = (cat, ev) => `${cat.id}/${ev.e}`;
 const evPair = (track, mode) => `${track.id}/${mode}`;
 const fmtYear = y => (y < 0 ? `${-y} f.Kr.` : String(y));
@@ -65,15 +65,24 @@ function showEventsTrack(track) {
     app.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
     const box = app.querySelector('.quizzes');
     box.innerHTML = '';
+    const back = () => showEventsTrack(track);
+    if (mode === 'koppling') {
+      const m = Store.known(evPair(track, 'koppling')), L = track.links || [];
+      const kn = L.filter(l => (m[linkKey(l)] || 0) >= KNOWN_AT).length;
+      box.appendChild(card(`<strong>🔗 Orsak & verkan</strong><small>Vad ledde till vad – tvärs över alla kategorier</small>
+        <small>${kn === L.length ? '✅ Du kan alla' : `${kn}/${L.length} kopplingar kan du`}</small>
+        <div class="progress"><div style="width:${Math.round(100 * kn / L.length)}%"></div></div>`, () => playLinks(track, onlySel.checked, back)));
+    }
+    box.appendChild(card(`<strong>🗺️ Tidslinjekarta</strong><small>Alla händelser på en tidslinje – med kopplingarna mellan dem</small>`, () => showTimelineMap(track, back)));
+    if (mode === 'koppling') return;
     track.categories.forEach(cat => {
       const p = evProgress(track, cat, mode);
       const pct = Math.round(100 * p.known / p.total);
       const status = p.known === p.total ? '✅ Du kan alla' : `${p.known}/${p.total} händelser kan du`;
-      const back = () => showEventsTrack(track);
-      box.appendChild(card(
+      box.insertBefore(card(
         `<strong>${cat.icon} ${cat.name}</strong><small>${status}</small>
          <div class="progress"><div style="width:${pct}%"></div></div>`,
-        () => (mode === 'fritext' ? playYears : playTimeline)(track, cat, onlySel.checked, back)));
+        () => (mode === 'fritext' ? playYears : playTimeline)(track, cat, onlySel.checked, back)), box.lastElementChild);
     });
   }
   render();
@@ -118,7 +127,7 @@ function playYears(track, cat, onlyUnknown, onBack) {
     const row = app.querySelector('#r' + i);
     row.classList.add(cls);
     inputs[i].replaceWith(Object.assign(document.createElement('span'), { className: 'a', textContent: fmtYear(items[i].y) }));
-    row.insertAdjacentHTML('beforeend', items[i].more ? infoBtn(items[i].e, `<p><strong>${fmtYear(items[i].y)}</strong></p><p>${esc(items[i].more)}</p>`) : '');
+    row.insertAdjacentHTML('beforeend', infoBtn(items[i].e, evInfoHtml(items[i])));
   }
 
   function start() {
@@ -252,7 +261,7 @@ function playTimeline(track, cat, onlyUnknown, onBack) {
       li.draggable = false;
       li.classList.add(ok.has(p) ? 'found' : 'missed');
       li.querySelector('.yr').textContent = fmtYear(order[p].y);
-      if (order[p].more) li.querySelector('.yr').insertAdjacentHTML('afterend', infoBtn(order[p].e, `<p><strong>${fmtYear(order[p].y)}</strong></p><p>${esc(order[p].more)}</p>`));
+      li.querySelector('.yr').insertAdjacentHTML('afterend', infoBtn(order[p].e, evInfoHtml(order[p])));
       li.querySelector('.mv').remove();
     });
     const score = ok.size;
@@ -281,7 +290,7 @@ function eventsStatsHtml() {
   const knownAll = Store.load().known;
   let html = '';
   TRACKS.filter(t => t.type === 'events').forEach(track => {
-    Object.keys(EV_MODES).forEach(mode => {
+    Object.keys(EV_MODES).filter(m => m !== 'koppling').forEach(mode => {
       const pk = evPair(track, mode);
       const m = knownAll[pk];
       if (!m) return;
@@ -292,7 +301,7 @@ function eventsStatsHtml() {
         const chips = cat.events.map(ev => {
           const s = m[evKey(cat, ev)] || 0;
           const cls = s >= KNOWN_AT ? 'known' : s > 0 ? 'half' : '';
-          return `<span class="chip ${cls}" title="${fmtYear(ev.y)}">${esc(ev.e)}${ev.more ? infoBtn(ev.e, `<p><strong>${fmtYear(ev.y)}</strong></p><p>${esc(ev.more)}</p>`) : ''}</span>`;
+          return `<span class="chip ${cls}" title="${fmtYear(ev.y)}">${esc(ev.e)}${infoBtn(ev.e, evInfoHtml(ev))}</span>`;
         });
         return `<tr><td>${cat.icon} ${cat.name}<br><small>${p.known}/${p.total}</small>
           <div class="progress"><div style="width:${Math.round(100 * p.known / p.total)}%"></div></div>
@@ -303,4 +312,150 @@ function eventsStatsHtml() {
     });
   });
   return html;
+}
+
+// ======================================================================
+// Kopplingar: orsak & verkan, samtidighet och tidslinjekarta
+// ======================================================================
+const linkKey = l => `${l.a}→${l.b}`;
+const histTrack = () => TRACKS.find(t => t.id === 'historia');
+function allEvents(track = histTrack()) { return track.categories.flatMap(c => c.events.map(ev => ({ ev, cat: c }))); }
+const findEvent = (name, track = histTrack()) => allEvents(track).find(x => x.ev.e === name);
+
+// Fördjupningsrutan för en händelse: årtal, fakta, kopplingar och vad som hände samtidigt
+function evInfoHtml(ev) {
+  const track = histTrack();
+  const me = findEvent(ev.e, track);
+  const L = (track.links || []);
+  const out = L.filter(l => l.a === ev.e).map(l => ({ l, other: findEvent(l.b, track), dir: '→ ledde till' }));
+  const inn = L.filter(l => l.b === ev.e).map(l => ({ l, other: findEvent(l.a, track), dir: '← orsakades av' }));
+  const same = allEvents(track).filter(x => x.ev !== ev && me && x.cat !== me.cat && Math.abs(x.ev.y - ev.y) <= 15)
+    .sort((a, b) => Math.abs(a.ev.y - ev.y) - Math.abs(b.ev.y - ev.y)).slice(0, 3);
+  const links = [...inn, ...out].filter(x => x.other);
+  return `<p><strong>${fmtYear(ev.y)}</strong>${me ? ` · ${me.cat.icon} ${esc(me.cat.name)}` : ''}</p>
+    ${ev.more ? `<p>${esc(ev.more)}</p>` : ''}
+    ${links.length ? `<h4>🔗 Hänger ihop med</h4><ul>${links.map(x => `<li><strong>${x.dir}:</strong> ${esc(x.other.ev.e)} (${fmtYear(x.other.ev.y)})<br><span class="small">${esc(x.l.why)}</span></li>`).join('')}</ul>` : ''}
+    ${same.length ? `<h4>🌍 Samtidigt i världen</h4><ul>${same.map(x => `<li>${fmtYear(x.ev.y)}: ${esc(x.ev.e)} <span class="small">(${x.cat.icon} ${esc(x.cat.name)})</span></li>`).join('')}</ul>` : ''}`;
+}
+
+// ---------- Läget Orsak & verkan ----------
+function playLinks(track, onlyUnknown, onBack) {
+  stopTimer();
+  const pk = evPair(track, 'koppling');
+  const m = Store.known(pk);
+  let pool = shuffle(track.links || []);
+  if (onlyUnknown) {
+    const left = pool.filter(l => (m[linkKey(l)] || 0) < KNOWN_AT);
+    if (left.length >= 3) pool = left.concat(pool.filter(l => !left.includes(l))).slice(0, Math.max(left.length, 3));
+  }
+  const round = pool.slice(0, 8);
+  const results = [];
+  let i = 0;
+  app.innerHTML = `
+    <button class="back">← ${track.name}</button>
+    <h2>🔗 Orsak & verkan</h2>
+    <div class="dots" id="dots"></div>
+    <div id="stage"></div><div id="msg"></div>`;
+  app.querySelector('.back').onclick = onBack;
+  const dots = () => app.querySelector('#dots').innerHTML = round.map((_, k) =>
+    `<span class="fdot ${k < results.length ? (results[k] ? 'ok' : 'bad') : k === i ? 'cur' : ''}"></span>`).join('');
+
+  function show() {
+    const l = round[i];
+    const A = findEvent(l.a, track), B = findEvent(l.b, track);
+    const forward = Math.random() < 0.5;
+    const given = forward ? A : B, answer = forward ? B : A;
+    // Lockande alternativ som passar i tid (efter orsaken / före följden), så att årtalen inte avslöjar svaret
+    const others = allEvents(track).filter(x => x.ev !== A.ev && x.ev !== B.ev && (forward ? x.ev.y > A.ev.y : x.ev.y < B.ev.y));
+    const opts = shuffle([answer, ...shuffle(others).slice(0, 3)]);
+    let wrong = 0;
+    dots();
+    app.querySelector('#msg').innerHTML = '';
+    const stage = app.querySelector('#stage');
+    stage.innerHTML = `
+      <div class="symptom"><span class="semo">${given.cat.icon}</span>
+        <div><div class="slabel">${fmtYear(given.ev.y)} · ${esc(given.cat.name)}</div><div class="stext">${esc(given.ev.e)}</div></div></div>
+      <h3>${forward ? 'Vad ledde det här till?' : 'Vad låg bakom det här?'}</h3>
+      <div class="vopts col">${opts.map((o, k) => `<button class="vopt" data-k="${k}">${esc(o.ev.e)} <span class="small">(${fmtYear(o.ev.y)})</span></button>`).join('')}</div>`;
+    stage.onclick = e => {
+      const b = e.target.closest('.vopt'); if (!b || b.disabled) return;
+      if (opts[+b.dataset.k] !== answer) { wrong++; b.classList.add('bad'); b.disabled = true; if (wrong < 2) return; }
+      stage.querySelectorAll('.vopt').forEach(x => { x.disabled = true; if (opts[+x.dataset.k] === answer) x.classList.add('ok'); });
+      const ok = wrong === 0;
+      results.push(ok); dots();
+      app.querySelector('#msg').innerHTML = `<div class="rnote ${ok ? 'ok' : ''}">
+        <strong>${ok ? '✅ Rätt!' : 'Kopplingen:'}</strong> ${esc(l.a)} (${fmtYear(A.ev.y)}) → ${esc(l.b)} (${fmtYear(B.ev.y)})
+        <br>${esc(l.why)}
+        <br><button class="btn" id="nextl">${i + 1 < round.length ? 'Nästa →' : 'Se resultatet →'}</button></div>`;
+      const nb = app.querySelector('#nextl');
+      nb.onclick = () => { i++; i < round.length ? show() : finish(); };
+      nb.focus();
+    };
+  }
+  function finish() {
+    const score = results.filter(Boolean).length;
+    const fresh = Store.updateWords(pk, round.map((l, k) => ({ key: linkKey(l), ok: results[k] })));
+    Store.addAttempt({ quiz: `${track.id}/koppling`, title: '🔗 Orsak & verkan', at: new Date().toISOString(), score, total: round.length, secs: 0,
+      missed: round.filter((_, k) => !results[k]).map(l => ({ q: l.a, a: l.b })) });
+    dots();
+    app.querySelector('#stage').innerHTML = `<div class="result"><strong>${score === round.length ? '🎉 Alla kopplingar rätt!' : 'Klart!'}</strong> ${score} av ${round.length} rätt på första försöket.
+      ${fresh ? `<br>📚 ${fresh === 1 ? '1 ny koppling' : fresh + ' nya kopplingar'} som du nu kan!` : ''}
+      <br><button class="btn" id="again">Kör igen</button> <button class="btn secondary" id="map">🗺️ Se tidslinjekartan</button></div>`;
+    app.querySelector('#msg').innerHTML = '';
+    app.querySelector('#again').onclick = () => playLinks(track, onlyUnknown, onBack);
+    app.querySelector('#map').onclick = () => showTimelineMap(track, onBack);
+  }
+  show();
+}
+
+// ---------- Tidslinjekarta ----------
+// Hela historien på en tidslinje. Skalan är hoptryckt för antiken så att de senaste seklerna får plats.
+function showTimelineMap(track, onBack) {
+  stopTimer();
+  const W = 1000, PAD = 46, LANE = 78, TOP = 50;
+  const BP = [[-800, 0], [500, 0.18], [1500, 0.42], [2030, 1]];
+  const xOf = y => { for (let k = 1; k < BP.length; k++) if (y <= BP[k][0]) { const [y0, f0] = BP[k - 1], [y1, f1] = BP[k]; return PAD + (f0 + (f1 - f0) * (y - y0) / (y1 - y0)) * (W - 2 * PAD); } return W - PAD; };
+  const cats = track.categories;
+  const H = TOP + cats.length * LANE + 40;
+  const knownA = Store.known(evPair(track, 'fritext')), knownB = Store.known(evPair(track, 'tidslinje'));
+  const isKnown = (cat, ev) => (knownA[evKey(cat, ev)] || 0) >= KNOWN_AT || (knownB[evKey(cat, ev)] || 0) >= KNOWN_AT;
+  const COLORS = ['#2b6cb0', '#b7791f', '#2f855a', '#9b2c2c', '#6b46c1'];
+  const pos = new Map();
+  let dotsSvg = '', laneSvg = '';
+  cats.forEach((cat, ci) => {
+    const y = TOP + ci * LANE + LANE / 2;
+    laneSvg += `<line x1="${PAD}" y1="${y}" x2="${W - PAD}" y2="${y}" class="lane"/><text x="8" y="${y + 4}" class="lanelabel">${cat.icon}</text>`;
+    // Sprid ut punkter som ligger nära varandra i höjdled
+    let lastX = -99, bump = 0;
+    cat.events.slice().sort((a, b) => a.y - b.y).forEach(ev => {
+      const x = xOf(ev.y);
+      bump = x - lastX < 12 ? (bump + 1) % 3 : 0; lastX = x;
+      const yy = y + (bump === 1 ? -16 : bump === 2 ? 16 : 0);
+      pos.set(ev.e, [x, yy]);
+      dotsSvg += `<g class="tdot ${isKnown(cat, ev) ? 'known' : ''}" data-e="${esc(ev.e)}"><title>${fmtYear(ev.y)}: ${esc(ev.e)}</title>
+        <circle cx="${x}" cy="${yy}" r="6" style="--c:${COLORS[ci % COLORS.length]}"/></g>`;
+    });
+  });
+  const arcs = (track.links || []).map(l => {
+    const a = pos.get(l.a), b = pos.get(l.b); if (!a || !b) return '';
+    const mx = (a[0] + b[0]) / 2, my = Math.min(a[1], b[1]) - 30 - Math.abs(b[0] - a[0]) * 0.12;
+    return `<path d="M${a[0]},${a[1]} Q${mx},${my} ${b[0]},${b[1]}" class="arc"><title>${esc(l.a)} → ${esc(l.b)}</title></path>`;
+  }).join('');
+  const ticks = [-750, 0, 500, 1000, 1500, 1600, 1700, 1800, 1900, 2000].map(y =>
+    `<line x1="${xOf(y)}" y1="${TOP - 10}" x2="${xOf(y)}" y2="${H - 30}" class="tick"/><text x="${xOf(y)}" y="${TOP - 16}" class="ticklabel">${y < 0 ? -y + ' f.Kr.' : y}</text>`).join('');
+  const kn = allEvents(track).filter(x => isKnown(x.cat, x.ev)).length;
+
+  app.innerHTML = `
+    <button class="back">← ${track.name}</button>
+    <h2>🗺️ Tidslinjekarta</h2>
+    <p class="legend">Alla ${allEvents(track).length} händelser på en tidslinje, en rad per kategori. <strong>Ifyllda</strong> punkter kan du (${kn} st).
+      Bågarna visar orsak och verkan. Klicka på en punkt för att läsa mer. Skalan är hoptryckt för antiken.</p>
+    <div class="tllegend">${cats.map((c, ci) => `<span><i style="background:${COLORS[ci % COLORS.length]}"></i>${c.icon} ${esc(c.name)}</span>`).join('')}<span><i class="arcsample"></i>orsak → verkan</span></div>
+    <div class="tlmap"><svg viewBox="0 0 ${W} ${H}">${ticks}${laneSvg}${arcs}${dotsSvg}</svg></div>`;
+  app.querySelector('.back').onclick = onBack;
+  app.querySelector('.tlmap').addEventListener('click', e => {
+    const g = e.target.closest('.tdot'); if (!g) return;
+    const x = findEvent(g.dataset.e, track);
+    if (x) showInfo(x.ev.e, evInfoHtml(x.ev));
+  });
 }

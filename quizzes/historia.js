@@ -103,3 +103,30 @@
   };
   window.TRACKS.find(t => t.id === 'historia').categories.forEach(c => c.events.forEach(e => { if (MORE[e.e]) e.more = MORE[e.e]; }));
 })();
+
+// Kopplingar mellan händelser – även tvärs över kategorierna.
+// a = det som kom först, b = det som följde, why = hur de hänger ihop.
+(() => {
+  window.TRACKS.find(t => t.id === 'historia').links = [
+    { a: 'Konstantinopel faller', b: 'Columbus når Amerika', why: 'När osmanerna kontrollerade handelsvägarna österut började européerna leta efter sjövägar västerut och söderut till Asien.' },
+    { a: 'Stockholms blodbad', b: 'Gustav Vasa väljs till kung', why: 'Avrättningarna utlöste upproret mot den danske kungen, som Gustav Vasa ledde.' },
+    { a: 'Luther spikar upp sina 95 teser', b: 'Gustav Vasa väljs till kung', why: 'Reformationen spreds till Sverige – Gustav Vasa använde den för att ta kyrkans makt och egendom till kronan.' },
+    { a: 'Regalskeppet Vasa sjunker', b: 'Gustav II Adolf stupar vid Lützen', why: 'Samme kung: Vasaskeppet byggdes för Gustav II Adolfs krig, och han dog själv i trettioåriga kriget fyra år senare.' },
+    { a: 'Finland förloras till Ryssland', b: 'Unionen med Norge upplöses', why: 'Som kompensation för Finland fick Sverige Norge 1814 – den unionen upplöstes sedan 1905.' },
+    { a: 'Columbus når Amerika', b: 'USA:s självständighetsförklaring', why: 'Efter Columbus koloniserades Amerika av européer – de brittiska kolonierna gjorde sig senare fria.' },
+    { a: 'USA:s självständighetsförklaring', b: 'Stormningen av Bastiljen', why: 'Den amerikanska revolutionen inspirerade fransmännen – och Frankrikes stöd till den hade gjort landet skuldsatt.' },
+    { a: 'Västromerska riket faller', b: 'Karl den store kröns till kejsare', why: 'Över 300 år efter Västroms fall återupplivades kejsartiteln i väst när påven krönte Karl den store.' },
+    { a: 'Vikingar plundrar Lindisfarne', b: 'Slaget vid Hastings', why: 'Normanderna som vann vid Hastings var ättlingar till vikingar som bosatt sig i Normandie.' },
+    { a: 'Första världskriget börjar', b: 'Ryska revolutionen', why: 'Krigets enorma påfrestningar – förluster, svält och missnöje – bidrog till att tsaren störtades.' },
+    { a: 'Ryska revolutionen', b: 'Sovjetunionen upplöses', why: 'Revolutionen ledde till att Sovjetunionen bildades – som sedan föll samman 1991.' },
+    { a: 'Andra världskriget slutar', b: 'FN bildas', why: 'Efter krigets förödelse bildades FN för att förhindra ett nytt världskrig.' },
+    { a: 'Andra världskriget slutar', b: 'Berlinmuren faller', why: 'Tyskland delades efter kriget. Muren byggdes 1961 för att stoppa flykten västerut – och föll 1989.' },
+    { a: 'Andra världskriget slutar', b: 'Första människan på månen', why: 'Efter kriget tävlade USA och Sovjetunionen i kalla krigets rymdkapplöpning – USA nådde månen först.' },
+    { a: 'Berlinmuren faller', b: 'Sovjetunionen upplöses', why: 'Murens fall var en del av östblockets kollaps, som slutade med att Sovjetunionen upplöstes två år senare.' },
+    { a: 'Julius Caesar mördas', b: 'Västromerska riket faller', why: 'Efter mordet blev Rom ett kejsardöme med Augustus som förste kejsare – den västra delen av kejsardömet föll 476.' },
+    { a: 'Västromerska riket faller', b: 'Konstantinopel faller', why: 'Östrom (Bysantinska riket) levde kvar i nästan tusen år efter Västroms fall, med Konstantinopel som huvudstad – tills osmanerna erövrade staden.' },
+    { a: 'Magna Carta undertecknas', b: 'USA:s självständighetsförklaring', why: 'Tanken i Magna Carta att även makthavare står under lagen inspirerade de amerikanska kolonisterna över 500 år senare.' },
+    { a: 'Första världskriget börjar', b: 'Kvinnor röstar för första gången i riksdagsval', why: 'Efter krigsåren och oron i Europa genomfördes demokratiska reformer även i Sverige – allmän rösträtt för kvinnor beslutades 1919.' },
+    { a: 'Sovjetunionen upplöses', b: 'Sverige går med i EU', why: 'När kalla kriget tog slut blev det möjligt för det alliansfria Sverige att gå med i EU.' },
+  ];
+})();

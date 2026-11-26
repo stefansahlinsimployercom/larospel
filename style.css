@@ -426,3 +426,20 @@ body.admin header { box-shadow: inset 0 -4px 0 #ffd84d; }
 .info-body h4 { margin: 12px 0 4px; }
 .info-body ul { margin: 4px 0 8px; padding-left: 20px; }
 .ulex { background: #fffbe6; border-radius: 8px; padding: 8px 10px; }
+
+/* Kopplingar & tidslinjekarta */
+.tlmap { overflow-x: auto; background: #fff; border: 1px solid #dde; border-radius: 10px; margin-bottom: 14px; }
+.tlmap svg { display: block; width: 100%; min-width: 680px; height: auto; }
+.tlmap .lane { stroke: #e3e6ee; stroke-width: 2; }
+.tlmap .lanelabel { font-size: 18px; }
+.tlmap .tick { stroke: #f0f2f6; stroke-width: 1; }
+.tlmap .ticklabel { font: 12px system-ui, sans-serif; fill: #889; text-anchor: middle; }
+.tlmap .arc { fill: none; stroke: #e67e22; stroke-width: 2; opacity: .55; }
+.tlmap .arc:hover { opacity: 1; stroke-width: 3; }
+.tlmap .tdot circle { fill: #fff; stroke: var(--c); stroke-width: 3; cursor: pointer; transition: r .15s; }
+.tlmap .tdot.known circle { fill: var(--c); }
+.tlmap .tdot:hover circle { r: 9; }
+.tllegend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 8px; font-size: .9rem; }
+.tllegend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.tllegend .arcsample { width: 22px; height: 0; border-radius: 0; border-top: 2px solid #e67e22; }
+.info-body .small { color: #667; font-size: .88rem; }
