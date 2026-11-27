@@ -78,4 +78,4 @@ Observera att spelet körs helt i webbläsaren – PIN:en är en enkel spärr, i
 - `quizzes/*.js` – innehållet (ord, händelser, uppgiftsgeneratorer, recept, fall …). Nytt innehåll läggs till här utan att röra motorerna.
 - `server.py` – liten lokal webbserver utan cache
 
-Se även [DESIGNPRINCIPER.md](DESIGNPRINCIPER.md) – metoden och principerna bakom spelet – , [docs/PROJEKTHISTORIK.md](docs/PROJEKTHISTORIK.md) – vad som byggts, beslut och idébacklogg – och [docs/INNEHALL.md](docs/INNEHALL.md) – hur man fyller på innehåll.
+Se även [DESIGNPRINCIPER.md](DESIGNPRINCIPER.md) – metoden och principerna bakom spelet –, [docs/PROJEKTHISTORIK.md](docs/PROJEKTHISTORIK.md) – vad som byggts, beslut och idébacklogg – och [docs/INNEHALL.md](docs/INNEHALL.md) – hur man fyller på innehåll.
