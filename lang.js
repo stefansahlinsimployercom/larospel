@@ -70,6 +70,7 @@ function playTiles(quiz, onBack, onFlip) {
       <span class="stat" id="score">0/${quiz.items.length}</span>
       <span class="stat" id="clock">${fmt(timeLeft)}</span>
       <label class="check"><input type="checkbox" id="pin" ${showPin() ? 'checked' : ''}> Visa pinyin (uttal)</label>
+      ${quiz.rebuild ? `<label class="check qonly"><input type="checkbox" id="qonly" ${quiz.only ? 'checked' : ''}> Bara ord jag inte kan</label>` : ''}
       ${onFlip ? '<button class="btn secondary" id="flip" title="Vänd håll">⇄ Vänd</button>' : ''}
       <button class="btn" id="start">Starta</button>
     </div>
@@ -80,6 +81,7 @@ function playTiles(quiz, onBack, onFlip) {
     </div>`;
   app.querySelector('.back').onclick = onBack;
   const flipBtn = app.querySelector('#flip'), startBtn = app.querySelector('#start'), tilesEl = app.querySelector('#tiles');
+  wireQuizFilter(quiz, onBack, onFlip, startBtn);
   if (flipBtn) flipBtn.onclick = () => startVocab(onFlip(), onBack, onFlip);
   app.querySelector('#pin').onchange = e => { Store.setSetting('zhPinyin', e.target.checked); renderTiles(); };
 

@@ -56,7 +56,7 @@ function showEventsTrack(track) {
     <div class="quizzes"></div>`;
   app.querySelector('.back').onclick = showHome;
   const onlySel = app.querySelector('#only');
-  onlySel.onchange = () => Store.setSetting('onlyUnknown', onlySel.checked);
+  onlySel.onchange = () => { Store.setSetting('onlyUnknown', onlySel.checked); render(); };
   app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => {
     mode = b.dataset.mode; Store.setSetting(modeKey, mode); render();
   });
@@ -75,17 +75,20 @@ function showEventsTrack(track) {
     }
     box.appendChild(card(`<strong>🗺️ Tidslinjekarta</strong><small>Alla händelser på en tidslinje – med kopplingarna mellan dem</small>`, () => showTimelineMap(track, back)));
     if (mode === 'koppling') return;
+    const done = [];
     track.categories.forEach(cat => {
       if (contribSkip(cat)) return;
       const p = evProgress(track, cat, mode);
       const pct = Math.round(100 * p.known / p.total);
       const status = p.known === p.total ? '✅ Du kan alla' : `${p.known}/${p.total} händelser kan du`;
-      box.insertBefore(card(
+      const c = card(
         `<strong>${cat.icon} ${cat.name}</strong><small>${status}</small>${byTag(cat)}
          <div class="progress"><div style="width:${pct}%"></div></div>`,
-        () => (mode === 'fritext' ? playYears : playTimeline)(track, cat, onlySel.checked, back)), box.lastElementChild);
+        () => (mode === 'fritext' ? playYears : playTimeline)(track, cat, onlySel.checked, back));
+      if (onlySel.checked && p.known === p.total) done.push(c); else box.insertBefore(c, box.lastElementChild);
     });
     contribAddCard(track, box, back);
+    doneSection(box, done, 'alla händelser');
   }
   render();
 }

@@ -180,6 +180,22 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 let timerId = null;
 function stopTimer() { clearInterval(timerId); timerId = null; }
 
+// "Träna bara det jag inte kan": kategorier man redan kan allt i samlas hopfällda sist i listan
+// Filterrutan i själva quizet (före start): bygg om quizet med eller utan ord man redan kan
+function wireQuizFilter(quiz, onBack, onFlip, startBtn) {
+  const q = app.querySelector('#qonly'); if (!q) return;
+  q.onchange = () => { Store.setSetting('onlyUnknown', q.checked); startVocab(quiz.rebuild(q.checked), onBack, onFlip); };
+  startBtn.addEventListener('click', () => q.closest('label').remove(), { once: true });
+}
+function doneSection(box, cards, what) {
+  if (!cards.length) return;
+  const d = document.createElement('details');
+  d.className = 'donecats';
+  d.innerHTML = `<summary>✅ Klara (${cards.length}) – du kan ${what} här. Visa ändå</summary><div class="quizzes"></div>`;
+  cards.forEach(c => d.lastElementChild.appendChild(c));
+  box.appendChild(d);
+}
+
 function card(html, onClick) {
   const el = document.createElement('button');
   el.className = 'card' + (onClick ? '' : ' disabled');
@@ -295,6 +311,7 @@ function buildVocabQuiz(track, cat, from, to, onlyUnknown) {
       : to === 'zh' ? 'Dra rätt kinesiskt tecken till varje ord.' : `Skriv ordet på ${L[to].toLowerCase()}. Rätt svar fylls i automatiskt.`,
     time: Math.max(30, words.length * 6),
     pairKey: pk,
+    only: !!onlyUnknown, rebuild: o => buildVocabQuiz(track, cat, from, to, o),
     items: words.map(w => ({ q: dispWord(from, alts(w[from])[0]), a: answersFor(to, w[to]), show: dispWord(to, alts(w[to])[0]),
       tile: alts(w[to])[0], key: wordKey(track, cat, w),
       info: Object.entries(L).map(([c, n]) => `<p><strong>${n}:</strong> ${esc(alts(w[c]).map(x => dispWord(c, x)).join(' / '))}</p>`).join('') })),
@@ -334,11 +351,12 @@ function showVocabTrack(track) {
   toSel.onchange = () => update('to');
   app.querySelector('#flip').onclick = () => { [fromSel.value, toSel.value] = [to, from]; update(); };
   const onlySel = app.querySelector('#only');
-  onlySel.onchange = () => Store.setSetting('onlyUnknown', onlySel.checked);
+  onlySel.onchange = () => { Store.setSetting('onlyUnknown', onlySel.checked); renderCats(); };
 
   function renderCats() {
     const box = app.querySelector('.quizzes');
     box.innerHTML = '';
+    const done = [];
     track.categories.forEach(cat => {
       if (contribSkip(cat)) return;
       if (!cat.words.every(w => w[from] && w[to])) {   // egen ordlista som inte finns på de valda språken
@@ -349,16 +367,18 @@ function showVocabTrack(track) {
       const p = catProgress(track, cat, from, to);
       const pct = Math.round(100 * p.known / p.total);
       const status = p.known === p.total ? '✅ Du kan alla' : `${p.known}/${p.total} ord kan du`;
-      box.appendChild(card(
+      const c = card(
         `<strong>${cat.icon} ${cat.name}</strong><small>${status}</small>${byTag(cat)}
          <div class="progress"><div style="width:${pct}%"></div></div>`,
         () => startVocab(buildVocabQuiz(track, cat, from, to, onlySel.checked), () => showTrack(track), () => {
           [from, to] = [to, from];
           Store.setSetting(track.id, { from, to });
-          return buildVocabQuiz(track, cat, from, to, onlySel.checked);
-        })));
+          return buildVocabQuiz(track, cat, from, to, Store.getSetting('onlyUnknown') !== false);
+        }));
+      if (onlySel.checked && p.known === p.total) done.push(c); else box.appendChild(c);
     });
     contribAddCard(track, box, () => showTrack(track));
+    doneSection(box, done, 'alla ord');
   }
   renderCats();
 }
@@ -385,6 +405,7 @@ function playQuiz(quiz, onBack, onFlip) {
       <input id="guess" placeholder="Skriv ett svar…" autocomplete="off" disabled>
       <span class="stat" id="score">0/${quiz.items.length}</span>
       <span class="stat" id="clock">${fmt(timeLeft)}</span>
+      ${quiz.rebuild ? `<label class="check qonly"><input type="checkbox" id="qonly" ${quiz.only ? 'checked' : ''}> Bara ord jag inte kan</label>` : ''}
       ${onFlip ? '<button class="btn secondary" id="flip" title="Vänd håll">⇄ Vänd</button>' : ''}
       <button class="btn" id="start">Starta</button>
     </div>
@@ -398,6 +419,7 @@ function playQuiz(quiz, onBack, onFlip) {
   const startBtn = app.querySelector('#start');
   const flipBtn = app.querySelector('#flip');
   app.querySelector('.back').onclick = onBack;
+  wireQuizFilter(quiz, onBack, onFlip, startBtn);
   if (flipBtn) flipBtn.onclick = () => startVocab(onFlip(), onBack, onFlip);
   if (quiz.cyr) wireCyrKeyboard(app, input);
 
