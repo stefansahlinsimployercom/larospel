@@ -50,6 +50,13 @@ function showProfiles() {
   app.querySelector('.back')?.addEventListener('click', showHome);
   app.querySelector('#pimport').onclick = startImport;
   app.querySelector('#newp').onclick = () => profileForm();
+  // Inga spelare alls (ny webbläsare eller ny adress/port): öppna formuläret direkt och förklara varför
+  if (!list.length) {
+    app.querySelector('.legend').innerHTML = `<strong>Välkommen!</strong> Skriv ditt namn nedan för att börja spela.
+      <br><span class="small">Har du spelat förut men ser inga spelare? Progressen sparas per webbläsare och adress – öppna Lärospel där du spelade sist,
+      eller ladda upp en sparad progressfil med knappen längst ner.</span>`;
+    profileForm();
+  }
   app.querySelectorAll('.pcard[data-id]').forEach(c => c.addEventListener('click', e => {
     const id = c.dataset.id;
     if (e.target.closest('[data-edit]')) return profileForm(Profiles.list().find(p => p.id === id));
