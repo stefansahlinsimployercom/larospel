@@ -70,6 +70,27 @@ T('uppskatta').questions.forEach(q => checkEstimate(q));
 (W.PROBLEM_TYPES || []).forEach(p => { checkRefs(`problemtyp:${p.id}`, p.needs); if (!W.PROBLEM_AREAS[p.area]) err(`problemtyp:${p.id}`, `okänt område ${p.area}`); });
 (T('historia').links || []).forEach(l => { if (!events.some(e => e.e === l.a) || !events.some(e => e.e === l.b)) err(`historia-koppling ${l.a}→${l.b}`, 'händelse saknas'); });
 
+// ---------- Ordlistor (språk) ----------
+const sprak = T('sprak'), LANGS = Object.keys(sprak.languages);
+let words = 0;
+const catIds = sprak.categories.map(c => c.id).filter((id, i, a) => a.indexOf(id) !== i);
+if (catIds.length) err('språk', `dubbla kategori-id:n: ${catIds.join(', ')}`);
+sprak.categories.forEach(c => {
+  const where = `språk:${c.id}`;
+  if (!c.name || !c.icon || !c.words || !c.words.length) return err(where, 'saknar namn, ikon eller ord');
+  c.words.forEach(w => {
+    words++;
+    LANGS.forEach(l => { if (!w[l] || !String(w[l]).trim()) err(where, `"${w.sv}" saknas på ${sprak.languages[l]}`); });
+    if (w.zh && !String(w.zh).split('/').every(x => /^[^|\s]+\|[^|]+$/.test(x))) err(where, `"${w.sv}": kinesiska ska skrivas tecken|pinyin (${w.zh})`);
+  });
+  // Samma ord två gånger på ett språk = två likadana frågor i quizet
+  LANGS.forEach(l => {
+    const first = c.words.map(w => String(w[l] || '').split('/')[0].trim().toLowerCase());
+    const d = first.filter((x, i) => x && first.indexOf(x) !== i);
+    if (d.length) err(where, `samma ord två gånger på ${sprak.languages[l]}: ${[...new Set(d)].join(', ')}`);
+  });
+});
+
 // ---------- Generatorerna ----------
 const yearOf = n => events.find(e => e.e === n).y;
 let genClaims = 0, genEst = 0;
@@ -92,7 +113,7 @@ for (let k = 0; k < 30; k++) W.genEstimates(8).forEach(q => {
 // ---------- Rapport ----------
 const aiC = claims.filter(c => c.ai).length, aiQ = T('uppskatta').questions.filter(q => q.ai).length;
 console.log(`Kontrollerat: ${claims.length} påståenden (${aiC} AI-skapade), ${T('uppskatta').questions.length} uppskattningar (${aiQ} AI-skapade), `
-  + `${(W.CROSS_LINKS || []).length} kopplingar, ${(W.PROBLEM_TYPES || []).length} problemtyper, `
+  + `${sprak.categories.length} ordlistor (${words} ord), ${(W.CROSS_LINKS || []).length} kopplingar, ${(W.PROBLEM_TYPES || []).length} problemtyper, `
   + `${genClaims} genererade påståenden och ${genEst} genererade uppskattningar.`);
 if (errors.length) { console.log(`\n${errors.length} fel:`); [...new Set(errors)].forEach(e => console.log(e)); process.exit(1); }
 console.log('✅ Inga fel hittades.');
