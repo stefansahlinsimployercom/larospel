@@ -7,8 +7,46 @@ Innehållet ligger i `quizzes/*.js`. Motorerna (`*.js` i roten) ska inte behöva
 
 1. Lägg till en omgång (t.ex. 3–5 ordlistor) direkt i rätt fil.
 2. Kör `node tools/validera.js` – ska sluta med "✅ Inga fel hittades." Rätta och kör igen tills det gör det.
-3. Ingen webbläsartest behövs för rent innehåll som validerats. Committa och pusha med ett kort meddelande.
+3. Committa och pusha med ett kort meddelande. GitHub Pages uppdateras automatiskt inom ett par minuter.
 4. Fyll i en rad i `docs/PROJEKTHISTORIK.md` under den senaste punkten om mer innehåll (eller lägg till en ny punkt).
+
+**Vad valideringen täcker – och när webbläsartest behövs**
+
+| Innehåll | Räcker `validera.js`? |
+|---|---|
+| Ordlistor, historia, zoologi, recept, Bluffkollen, Uppskattningar, kopplingar, problemtyper | ✅ Ja – inget webbläsartest |
+| Nya matte/fysik-steg av snabbräkningstyp (`{ text, answer }`) | ✅ Ja – skriptet kör varje generator 300 gånger |
+| Geografi (nya platser) | ⚠️ Skriptet kollar formatet, men titta på kartan att platsen hamnar rätt |
+| Nya steg-för-steg-uppgifter (`eq`, `geo`, `phys`), nya speltyper eller ändrade motorer | ❌ Testa i webbläsaren |
+
+Webbläsartest görs på `http://127.0.0.1:<port>` med en testspelare – aldrig på spelarens riktiga data.
+
+## Startinstruktion för en ny chatt (Claude Code)
+
+Klistra in och byt ut det som ska läggas till:
+
+```
+Fyll på Lärospel (mappen larospel). Läs docs/INNEHALL.md och följ den.
+Lägg till: <t.ex. ordlistorna Frukt och grönsaker, Hemmet, Skolan / 10 händelser om industriella revolutionen i Historia / receptet Köttbullar>.
+Kör node tools/validera.js tills den är grön, committa och pusha.
+Inget webbläsartest om tabellen i INNEHALL.md säger att det inte behövs. Svara kort: vad som lades till.
+```
+
+Fortsätt sedan i samma chatt med bara "Nästa: …".
+
+## Med en extern AI (ChatGPT, Gemini …)
+
+Repot är publikt, så en AI med webbläsning kan läsa formatet själv. Annars: klistra in avsnittet om rätt format nedan.
+
+```
+Läs https://github.com/stefansahlinsimployercom/larospel/blob/main/docs/INNEHALL.md
+och titta på exemplen i https://github.com/stefansahlinsimployercom/larospel/blob/main/quizzes/sprak.js
+Skriv <t.ex. ordlistorna Frukt och grönsaker och Skolan, 12 ord var> i exakt samma JavaScript-format,
+redo att klistras in sist i categories-listan. Bara koden, ingen förklaring.
+```
+
+Klistra sedan in svaret i Claude Code med: *"Lägg in det här i quizzes/sprak.js, kör validera.js, rätta eventuella fel, committa och pusha"* – eller klistra in det själv i filen och kör `node tools/validera.js`.
+Extern AI kan inte köra valideringen, så det steget behövs alltid. Den kan också ha fel i fakta (årtal, översättningar) – validering hittar formatfel, inte sakfel.
 
 ## Ordlistor – `quizzes/sprak.js`
 
