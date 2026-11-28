@@ -76,6 +76,9 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 ## Idébacklogg
 
 **Nära till hands**
+- **Användartest (att göra):** låt 3–5 personer spela medan man tittar utan att hjälpa – fastna-analys på spelet självt. Använd spelet själv dagligen och anteckna det som skaver.
+- **Sundare spelkänsla (att göra):** egna rekord före topplistor, en "frysdag" för sviten, topplistan frivillig – så att sviter inte blir stress och de som ligger efter inte tappar lusten.
+- **För vem? (att göra):** välj en tydlig första målgrupp per video/länk, t.ex. vuxna som vill lära sig om, de som lär sig svenska eller vänner med ett visst behov.
 - **Tydliga tillbakalänkar och webbläsarens bakåtknapp (åtgärda först):** varje sida ska ha en tydlig väg tillbaka, och bakåtknappen ska fungera inne i spelet i stället för att lämna sidan.
 - **Gästläge och direktlänkar (att göra):** spela utan att skapa spelare (namnge senare); delbara länkar direkt till ämne, spel eller kategori, t.ex. …/#/sprak/farger.
 - **Grannspråk och dialekter (att göra):** danska och norska för svenskar – markera ord som lika / lika men annorlunda stavade / helt olika / falska vänner och träna bara på skillnaderna; stavnings- och uttalsregler som mönster (ö↔ø, ä↔æ …) med uppläsning. Samma modell kan användas för dialekter.
