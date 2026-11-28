@@ -116,6 +116,10 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - **Visuella teman (att göra):** historia, äventyr, rymd … – ett tema är bara lite data (färger, mönstertyp, tillåtna emoji, täthet) och en uppsättning säkra mönstergeneratorer ritar bakgrunden – olika varje gång (ny stjärnhimmel, nytt pergament). Standardtema per ämne och kategori (rymden, medeltiden, upplysningstiden …); egna teman som en fil man kan dela.
 - **Ordförråd för ett mål (att göra):** ordpaket för ett syfte – en viss sorts YouTube-kanal, ett yrke, en miljö. Klistra in undertexter eller en text så plockar spelet fram de ord som är typiska för just den och som du inte redan kan.
 
+- **Rörliga bakgrunder (att göra, frivilligt):** blinkande stjärnor, svävande damm – billigt ritat, pausas när fliken inte syns, avstängt för den som valt mindre rörelse.
+- **Grammatikspel (att göra):** *grammatik som algebra* – en mening plus operationskort ("gör till dåtid", "gör till fråga", "nekande", "plural") precis som korten i algebran; *grammatikdetektiven* – hitta felet och vilken sorts fel (Bluffkollens motor); *mönster först* – se några exempel, gissa regeln, använd den på ett nytt ord; bygg meningen med ordbrickor (t.ex. ordföljd).
+- **Samhällskunskap, nationalekonomi, pedagogik (att göra):** märk varje påstående som 📊 fakta, 🧩 modell (med antaganden) eller ⚖️ värdering – och ett spel "Fakta, modell eller åsikt?"; simuleringar där man kan byta modell och ser antagandena; *steelman* – välj det starkaste argumentet för båda sidor; avvägningskort (vem vinner, vem förlorar, hur stark är forskningen); uppskattningsfrågor om verklig statistik som avslöjar felaktiga föreställningar. Varje påstående med källa och hur säkert det är.
+
 **För att gå från prototyp till verktyg för utbildningar och arbetsplatser**
 - **Utmaningslänkar och resultatkort (att göra):** "slå mitt resultat" som länk direkt till samma övning, och en bild av resultatet att dela – för att sprida spelet via video och sociala medier.
 - **Ladda innehåll per ämne vid behov (att göra när innehållet växer):** idag laddas allt innehåll när sidan öppnas; dela upp så att bara det ämne man spelar hämtas.
