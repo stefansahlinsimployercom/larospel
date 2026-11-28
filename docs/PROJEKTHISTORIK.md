@@ -76,6 +76,9 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 ## Idébacklogg
 
 **Nära till hands**
+- **Grammatik i Språk (att göra, 28 nov 2026):** genus och artiklar (en/ett, un/une, el/la, o/a …) som sorteringsspel med en korg per artikel; pluraländelser (svenska -ar/-or/-er/-n/oförändrat – bra för den som lär sig svenska); oregelbundna verb (minst som Sporcle-tabell, gärna smartare, t.ex. grupperat efter mönster).
+- **"Äg din egen data" – filer i stället för databas (att göra):** utöka från progress till innehållspaket (egna listor, recept …) som delas som fil eller som länk till en publik JSON-fil och kontrolleras i webbläsaren – inget sparas på sajten. Påminnelse om att spara ner progress.
+- **Flytt via länk/QR-kod (att göra):** progress (komprimerad, det viktigaste) eller en liten lista i en länk/QR-kod; datan ligger efter # i adressen och skickas aldrig till någon server. Ryms ca 2–3 kB – hela historiken kräver fil.
 - Fler algebrasteg (bråk, negativa lösningar, ekvationssystem, andragradsekvationer); geometri och fysik som ordproblem.
 - Fler kedjor: ekonomins kretslopp, hur en aktieaffär går till, onboarding på en arbetsplats.
 - **"Vad händer om…?"-läge** för kedjor: ändra en sak och följ effekten genom kedjan.
