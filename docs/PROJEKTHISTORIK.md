@@ -125,6 +125,9 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - **Vem röstade för vad – och när? (att göra):** ett riktigt riksdagsbeslut → sortera partierna i för, emot och avstod; facit från riksdagens öppna voteringsdata med datum och länk. På en tidslinje syns hur ståndpunkter skiftar över åren.
 - **Vem sa vad – och när? (att göra):** riktiga citat från politiker med källa, datum och sammanhang – gissa vem som sa det och när. Riksdagens anföranden är också öppna data. Korta, exakta citat, alltid med länk.
 
+- **Fulknep – känn igen argumentationsknep (att göra):** som Bluffkollen: hitta var i en dialog knepet sitter, vad det heter och hur ett ärligt argument hade sett ut. I påhittade världar och frågor så att bara knepet syns: whataboutism, halmgubbe, skäggets paradox, ord som byter betydelse mitt i argumentet, motte-and-bailey, flyttade målstolpar, falskt dilemma, Gish-galopp, ingen sann skotte, laddad fråga, körsbärsplockning, sluttande plan med flera. Senare nivå: balanserade verkliga exempel från alla håll, med källor.
+- **Mät antal besökare utan kakor (att göra):** gratis och integritetsvänlig statistik – ingen persondata.
+
 **För att gå från prototyp till verktyg för utbildningar och arbetsplatser**
 - **Utmaningslänkar och resultatkort (att göra):** "slå mitt resultat" som länk direkt till samma övning, och en bild av resultatet att dela – för att sprida spelet via video och sociala medier.
 - **Ladda innehåll per ämne vid behov (att göra när innehållet växer):** idag laddas allt innehåll när sidan öppnas; dela upp så att bara det ämne man spelar hämtas.
