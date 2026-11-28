@@ -76,6 +76,10 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 ## Idébacklogg
 
 **Nära till hands**
+- **Tydliga tillbakalänkar och webbläsarens bakåtknapp (åtgärda först):** varje sida ska ha en tydlig väg tillbaka, och bakåtknappen ska fungera inne i spelet i stället för att lämna sidan.
+- **Gästläge och direktlänkar (att göra):** spela utan att skapa spelare (namnge senare); delbara länkar direkt till ämne, spel eller kategori, t.ex. …/#/sprak/farger.
+- **Grannspråk och dialekter (att göra):** danska och norska för svenskar – markera ord som lika / lika men annorlunda stavade / helt olika / falska vänner och träna bara på skillnaderna; stavnings- och uttalsregler som mönster (ö↔ø, ä↔æ …) med uppläsning. Samma modell kan användas för dialekter.
+- **Skalbart och billigt att fylla på (att göra):** en sida i spelet där man klistrar in innehåll (t.ex. från en gratis-AI), får det kontrollerat och kan spara ner det – utan Node eller installation. Matte och fysik som *datamallar* i stället för kod (text med variabler, intervall och en formel för svaret), så att även de kan skrivas av en gratis-AI.
 - **Grammatik i Språk (att göra, 28 nov 2026):** genus och artiklar (en/ett, un/une, el/la, o/a …) som sorteringsspel med en korg per artikel; pluraländelser (svenska -ar/-or/-er/-n/oförändrat – bra för den som lär sig svenska); oregelbundna verb (minst som Sporcle-tabell, gärna smartare, t.ex. grupperat efter mönster).
 - **Oregelbundna verb efter mönster (att göra):** grupper som *springa–sprang–sprungit*, *dricka–drack–druckit* – t.ex. sortera verb i korgar per mönster.
 - **Lyssna och säg (att göra):** uppläsning med webbläsarens talsyntes (gratis, alla moderna webbläsare); säg ordet i mikrofonen med taligenkänning (Chrome/Edge, ljudet går via Google/Microsoft) – grov uttalskoll genom att det igenkända ordet stämmer.
