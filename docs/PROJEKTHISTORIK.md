@@ -77,6 +77,13 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 
 **Nära till hands**
 - **Grammatik i Språk (att göra, 28 nov 2026):** genus och artiklar (en/ett, un/une, el/la, o/a …) som sorteringsspel med en korg per artikel; pluraländelser (svenska -ar/-or/-er/-n/oförändrat – bra för den som lär sig svenska); oregelbundna verb (minst som Sporcle-tabell, gärna smartare, t.ex. grupperat efter mönster).
+- **Oregelbundna verb efter mönster (att göra):** grupper som *springa–sprang–sprungit*, *dricka–drack–druckit* – t.ex. sortera verb i korgar per mönster.
+- **Lyssna och säg (att göra):** uppläsning med webbläsarens talsyntes (gratis, alla moderna webbläsare); säg ordet i mikrofonen med taligenkänning (Chrome/Edge, ljudet går via Google/Microsoft) – grov uttalskoll genom att det igenkända ordet stämmer.
+- **Granskat innehåll (att göra):** en admin kryssar i att en fråga/lista är testad och korrekt → ✔️ granskad-märke, som extra spärr mot AI-fel.
+- **Fuskläge och adminläge (att göra):** fuskläge = låsa upp allt (det admin-läget gör idag, t.ex. om man tappat sin fil); adminläge = granskning, flaggor och moderering.
+- **"Var befinner du dig?" i alla ämnen (att göra):** hoppa fram till rätt nivå med ett kort test, som inplaceringstestet i matte men överallt.
+- **Bilder i delbart innehåll (att göra):** emoji och inbäddad SVG i första hand; egna paket kan länka till bilder eller bädda in små bilder i JSON-filen.
+- **Ännu säkrare mattegeneratorer (att göra):** valideringen räknar om svaret oberoende (sätter in svaret i ekvationen/formeln), testar alla kombinationer där de är få.
 - **"Äg din egen data" – filer i stället för databas (att göra):** utöka från progress till innehållspaket (egna listor, recept …) som delas som fil eller som länk till en publik JSON-fil och kontrolleras i webbläsaren – inget sparas på sajten. Påminnelse om att spara ner progress.
 - **Flytt via länk/QR-kod (att göra):** progress (komprimerad, det viktigaste) eller en liten lista i en länk/QR-kod; datan ligger efter # i adressen och skickas aldrig till någon server. Ryms ca 2–3 kB – hela historiken kräver fil.
 - Fler algebrasteg (bråk, negativa lösningar, ekvationssystem, andragradsekvationer); geometri och fysik som ordproblem.
