@@ -76,6 +76,10 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 ## Idébacklogg
 
 **Nära till hands**
+- **"Något skaver?"-anteckningar (att göra):** en liten 📝-knapp på varje sida; anteckningen sparas med sida och tid, och en lista i adminläget kan kopieras eller sparas ner som underlag till att göra-listan.
+- **Fler spel (att göra):** regioner och regionhuvudstäder/delstatshuvudstäder i olika länder; konturer – känn igen ett land eller en region på formen; fler språk.
+- **Ordfrekvens (att göra):** visa varje ords plats bland språkets vanligaste ord, ett läge med "de N vanligaste orden" i stället för kategorier, och hur stor del av vanlig text orden man kan täcker.
+- **Uppskattad språknivå (att göra, på skoj):** "är du på nivå B1 bör du klara det här" – en lekfull uppskattning utifrån ordförråd och lite grammatik, tydligt märkt att den inte är något officiellt resultat.
 - **Användartest (att göra):** låt 3–5 personer spela medan man tittar utan att hjälpa – fastna-analys på spelet självt. Använd spelet själv dagligen och anteckna det som skaver.
 - **Sundare spelkänsla (att göra):** egna rekord före topplistor, en "frysdag" för sviten, topplistan frivillig – så att sviter inte blir stress och de som ligger efter inte tappar lusten.
 - **För vem? (att göra):** välj en tydlig första målgrupp per video/länk, t.ex. vuxna som vill lära sig om, de som lär sig svenska eller vänner med ett visst behov.
@@ -107,6 +111,9 @@ Det som avgör om det blir banbrytande är inte idén utan **evidens**: testa me
 - **"Varför?"-lager i allmänbildning:** visa kopplingar mellan saker (t.ex. Konstantinopels fall → nya handelsvägar → Columbus) och en *rimlighetskoll* där man använder det man kan för att bedöma om påståenden stämmer.
 - **Grund för allt ovan:** beskriv innehållet som strukturerad kunskap (en kunskapsgraf: saker med egenskaper och kopplingar), så att kopplingar och korsfrågor kan genereras automatiskt.
 - **Skräddarsydda, AI-genererade frågor:** frågor som hela tiden anpassas efter vad spelaren kan och hur långt den kommit – byggda av redan verifierad kunskap plus *gränsen* (ett steg bortom). Hybrid: (1) beräknade generatorer där svaret kan räknas fram (matte, fysik, årtal, avstånd), (2) AI skriver formuleringar, kopplingar, ordproblem och bluffpåståenden *förankrade i kunskapsgrafen*, (3) AI med webbsök för nya fakta – med källa. Validering i lager: räkna om svaret, kontrollera mot grafen, en andra AI-granskning, källhänvisning, flagga-knapp för spelare och stickprov av människa; frågor som beter sig konstigt (alla svarar fel) plockas bort automatiskt. Teknik: API-nyckeln får inte ligga i webbläsaren → en liten server/serverlös funktion; cacha och återanvänd frågor; skicka ingen persondata. Första steg: generera frågebanker i omgångar offline, granska och lägg in – sedan generering i realtid. *Steg 1 klart 26 nov 2026 (se punkt 28): generatorer, AI-omgång offline, märkning, flaggning och valideringsskript. Kvar: generering i realtid via en server, automatisk bortplockning av frågor som beter sig konstigt.*
+
+**Kul senare**
+- **Visuella teman (att göra):** historia, äventyr, rymd … – färger, typsnitt och bakgrundsmönster; egna teman som en fil man kan ladda upp och dela.
 
 **För att gå från prototyp till verktyg för utbildningar och arbetsplatser**
 - **Utmaningslänkar och resultatkort (att göra):** "slå mitt resultat" som länk direkt till samma övning, och en bild av resultatet att dela – för att sprida spelet via video och sociala medier.
